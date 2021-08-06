@@ -14,7 +14,11 @@ namespace PrimeSieveCS
         {
             public readonly uint sieveSize = 0;
             readonly uint halfLimit;
+            readonly uint segcount;
             readonly ulong[] bits;
+            readonly uint upperlimit;
+
+            const ulong ULONG_MSB = 1UL << 63;
 
             static Dictionary<uint, int> validationDict = new Dictionary<uint, int>
             {
@@ -35,13 +39,16 @@ namespace PrimeSieveCS
                 sieveSize = size;
                 halfLimit = (size + 1) / 2;
                 bits = new ulong[(int)(halfLimit / wordBits + 1)];
+                segcount = halfLimit / wordBits + 1;
+
+                upperlimit = (uint)(halfLimit / wordBits + (halfLimit % 64 == 0 ? 0 : 1)) * 64 - 1;
             }
 
             public IEnumerable<uint> EnumeratePrimes()
             {
                 yield return 2;
                 for (uint num = 3; num <= sieveSize; num += 2)
-                    if ((bits[(num / 2) / 64] & (1UL << (int)(num / 2))) == 0)
+                    if ((bits[(upperlimit - (num / 2)) / 64] & (ULONG_MSB >> (int)(num / 2))) == 0)
                         yield return num;
             }
 
@@ -52,6 +59,9 @@ namespace PrimeSieveCS
                     return validationDict.ContainsKey(sieveSize) && validationDict[sieveSize] == EnumeratePrimes().Count();
                 }
             }
+
+            static int Mod64(int value) => value & 0x3F;
+            static int Div64(int value) => value >> 6;
 
             /// <summary>
             /// A clear bits function thats using pointers so we dont need to store the index in a register.
@@ -65,34 +75,32 @@ namespace PrimeSieveCS
 
                 //Performance: we want factor and offset as an int so we can dodge a SUB in the while comparison in the inner loop
 
-                var ptrStart = ptr + start / 64;
-                var ptrEnd   = ptr + limit / 64;
-
-                ulong rollingMask = 1UL << (int)(start);
-                int offset = (int)(64 - start % 64);
-                while (ptrStart <= ptrEnd)
+                
+                int offset = (int)(limit - start) % 64;
+                ulong rollingMask = 1UL << offset;
+                
+                for (int i = (int)(limit - start) / 64; i >= 0; i--)
                 {
-                    var segment = ptrStart[0];
+                    var segment = ptr[i];
                     do
                     {
                         segment |= rollingMask;
-                        rollingMask = BitOperations.RotateLeft(rollingMask, factor);
+                        rollingMask = BitOperations.RotateRight(rollingMask, factor);
                         offset -= factor;
-                    } while (offset > 0);
+                    } while (offset >= 0);
                     offset += 64;
-                    ptrStart[0] = segment;
-                    ptrStart++;
+                    ptr[i] = segment;
                 }
             }
 
             //Note: this is not actually used
             //it is the reference for the unrolled version: ClearBitsSparseUnrolled4Rev
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            unsafe static void ClearBitsSparse(ulong* ptr, uint start, uint factor, uint limit)
+            unsafe static void ClearBitsSparse(ulong* ptr, uint start, int factor, uint limit)
             {
-                for (uint index = start; index < limit; index += factor)
+                for (int index = (int)(limit - start); index >= 0; index -= factor)
                 {
-                    ptr[index / 64] |= 1UL << (int)(index % 64);
+                    ptr[Div64(index)] |= 1UL << Mod64(index);
                 }
             }
 
@@ -101,35 +109,34 @@ namespace PrimeSieveCS
             /// 
             /// Provided by mike-barber. Reversed version by ItalyToast
             /// </summary>
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            unsafe static void ClearBitsSparseUnrolled4Rev(ulong* ptr, uint start, uint factor, uint limit)
+            //[MethodImpl(MethodImplOptions.AggressiveInlining)]
+            unsafe static void ClearBitsSparseUnrolled4Rev(ulong* ptr, uint start, int factor, uint limit)
             {
-                uint bitsset = (limit - start) / factor;
-                int iter = (int)bitsset;
+                int index = (int)(limit - start);
 
-                var i0 = start;
-                var i1 = start + factor;
-                var i2 = start + factor * 2;
-                var i3 = start + factor * 3;
+                var i0 = index;
+                var i1 = index - factor;
+                var i2 = index - factor * 2;
+                var i3 = index - factor * 3;
 
                 var factor4 = factor * 4;
-                for (iter -= 4; iter > 0; iter -= 4)
+                while (i3 >= 0)
                 {
-                    ptr[i0 / 64] |= 1ul << (int)(i0 % 64);
-                    ptr[i1 / 64] |= 1ul << (int)(i1 % 64);
-                    ptr[i2 / 64] |= 1ul << (int)(i2 % 64);
-                    ptr[i3 / 64] |= 1ul << (int)(i3 % 64);
+                    ptr[Div64(i0)] |= 1ul << Mod64(i0);
+                    ptr[Div64(i1)] |= 1ul << Mod64(i1);
+                    ptr[Div64(i2)] |= 1ul << Mod64(i2);
+                    ptr[Div64(i3)] |= 1ul << Mod64(i3);
 
-                    i0 += factor4;
-                    i1 += factor4;
-                    i2 += factor4;
-                    i3 += factor4;
+                    i0 -= factor4;
+                    i1 -= factor4;
+                    i2 -= factor4;
+                    i3 -= factor4;
                 }
 
-                for (iter += 4; iter >= 0; iter--)
+                while (i0 >= 0)
                 {
-                    ptr[i0 / 64] |= 1ul << (int)(i0 % 64);
-                    i0 += factor;
+                    ptr[Div64(i0)] |= 1ul << Mod64(i0);
+                    i0 -= factor;
                 }
             }
 
@@ -149,11 +156,11 @@ namespace PrimeSieveCS
                     while (true)
                     {
                         // Scan for the next unset bit which means it is a prime factor
-                        var segment = ptr[halfFactor / 64];
+                        var segment = ptr[(upperlimit - halfFactor) / 64];
                         var offset = halfFactor % 64;
                         segment = ~segment; //since we only have access to TrailingZeroCount, we have to flip all the bits
-                        segment >>= (int)offset;
-                        var jump = BitOperations.TrailingZeroCount(segment);
+                        segment <<= (int)offset;
+                        var jump = BitOperations.LeadingZeroCount(segment);
                         if (jump == 64)
                         {
                             halfFactor += 64 - offset;
@@ -171,11 +178,12 @@ namespace PrimeSieveCS
                         //Half factor of 20 seems to be optimal. (~3 bits / ulong) 
                         if (halfFactor < 20)
                         {
-                            ClearBitsDense(ptr, (factor * factor) / 2, (int)factor, halfLimit);
+                            ClearBitsDense(ptr, (factor * factor) / 2, (int)factor, upperlimit);
                         }
                         else
                         {
-                            ClearBitsSparseUnrolled4Rev(ptr, (factor * factor) / 2, factor, halfLimit);
+                            ClearBitsSparse(ptr, (factor * factor) / 2, (int)factor, upperlimit);
+                            //ClearBitsSparseUnrolled4Rev(ptr, (factor * factor) / 2, (int)factor, upperlimit);
                         }
                     }
             }
