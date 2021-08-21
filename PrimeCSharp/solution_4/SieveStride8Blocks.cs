@@ -93,7 +93,8 @@ namespace PrimeSieveCS
                 for (int stride = 0; stride < 8; stride++)
                 {
                     var (index, mask) = strides[stride];
-                    var blockEnd = ptr + Math.Min(bytecount + 1, index + blocksize);
+                    var blockEnd = Math.Min(bytecount + 1, index + blocksize);
+                    var blockEndPtr = ptr + blockEnd;
 
                     var i0 = ptr + index;
                     var i1 = ptr + index + factor;
@@ -101,7 +102,7 @@ namespace PrimeSieveCS
                     var i3 = ptr + index + factor * 3;
 
                     uint factor3 = factor * 4; 
-                    for (; i3 < blockEnd;)
+                    for (; i3 < blockEndPtr;)
                     {
                         i0[0] |= mask;
                         i1[0] |= mask;
@@ -114,7 +115,7 @@ namespace PrimeSieveCS
                         i3 += factor3;
                     }
 
-                    for (; i0 < blockEnd; i0 += factor)
+                    for (; i0 < blockEndPtr; i0 += factor)
                     {
                         i0[0] |= mask;
                     }

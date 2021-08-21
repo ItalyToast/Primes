@@ -36,7 +36,7 @@ namespace PrimeSieveCS
             CultureInfo.CurrentCulture = new CultureInfo("en-US", false);
 
             //RunSieveDefault();
-            RunSieveStrided8();
+            //RunSieveStrided8();
             RunSieveStrided8Blocks();
         }
 
