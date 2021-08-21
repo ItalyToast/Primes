@@ -15,17 +15,17 @@ namespace PrimeSieveCS
     /// 
     /// This simplifies the code a whole lot.
     /// </summary>
-    class SieveStriped : ISieve
+    class SieveStride8 : ISieve
     {
-        public readonly uint sieveSize = 0;
+        readonly uint sieveSize = 0;
         readonly uint halfLimit;
         readonly ulong[] bits;
 
-        public string Name => "italytoast-striped";
+        public string Name => "italytoast-stride8";
 
         public uint SieveSize => sieveSize;
 
-        public SieveStriped(uint size)
+        public SieveStride8(uint size)
         {
             const int wordBits = sizeof(ulong) * 8;
 
@@ -43,23 +43,19 @@ namespace PrimeSieveCS
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        unsafe static void ClearBitsStriped(byte* ptr, uint start, uint factor, uint limit)
+        unsafe static void ClearBitsStride8(byte* ptr, uint start, uint factor, uint limit)
         {
-            var stripedMask = 0;
             var count = limit / 8;
-            while (true)
+            for (int stride = 0; stride < 8; stride++)
             {
                 var index = start / 8;
                 byte mask = (byte)(1 << (int)(start % 8));
-
-                if ((mask & stripedMask) != 0) break;//checks if we have cleared the stripe already. If so we are finnished.
 
                 for (uint i = index; i < count; i += factor)
                 {
                     ptr[i] |= mask;
                 }
                 start += factor;// push start forward by factor so we start in the next stripe.
-                stripedMask |= mask;
             }
         }
 
@@ -97,7 +93,7 @@ namespace PrimeSieveCS
 
                     if (halfFactor > halfRoot) break;
 
-                    ClearBitsStriped((byte*)ptr, (factor * factor) / 2, factor, halfLimit);
+                    ClearBitsStride8((byte*)ptr, (factor * factor) / 2, factor, halfLimit);
                 }
         }
     }

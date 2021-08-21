@@ -35,8 +35,9 @@ namespace PrimeSieveCS
         {
             CultureInfo.CurrentCulture = new CultureInfo("en-US", false);
 
-            RunSieveDefault();
-            RunSieveStriped();
+            //RunSieveDefault();
+            RunSieveStrided8();
+            RunSieveStrided8Blocks();
         }
 
         static void RunSieveDefault()
@@ -70,7 +71,7 @@ namespace PrimeSieveCS
                 PrintResults(sieve, false, tD.TotalSeconds, passes);
         }
 
-        static void RunSieveStriped()
+        static void RunSieveStrided8()
         {
             //setup
             const int sieveSize = 1_000_000;
@@ -78,7 +79,7 @@ namespace PrimeSieveCS
             //warmup - 5 seconds permitted
             var wStart = DateTime.UtcNow;
             while ((DateTime.UtcNow - wStart).TotalSeconds < 5)
-                new SieveStriped(sieveSize).RunSieve();
+                new SieveStride8(sieveSize).RunSieve();
 
             //Forcing a GC to give us as much space on the heap as possible (dont do this in real code).
             GC.Collect(0, GCCollectionMode.Forced, true, true);
@@ -86,11 +87,42 @@ namespace PrimeSieveCS
             //running the dragrace
             var tStart = DateTime.UtcNow;
             var passes = 0;
-            SieveStriped sieve = null;
+            SieveStride8 sieve = null;
 
             while ((DateTime.UtcNow - tStart).TotalSeconds < 5)
             {
-                sieve = new SieveStriped(sieveSize);
+                sieve = new SieveStride8(sieveSize);
+                sieve.RunSieve();
+                passes++;
+            }
+
+            var tD = DateTime.UtcNow - tStart;
+
+            if (sieve != null)
+                PrintResults(sieve, false, tD.TotalSeconds, passes);
+        }
+
+        static void RunSieveStrided8Blocks()
+        {
+            //setup
+            const int sieveSize = 1_000_000;
+
+            //warmup - 5 seconds permitted
+            var wStart = DateTime.UtcNow;
+            while ((DateTime.UtcNow - wStart).TotalSeconds < 5)
+                new SieveStride8Blocks(sieveSize).RunSieve();
+
+            //Forcing a GC to give us as much space on the heap as possible (dont do this in real code).
+            GC.Collect(0, GCCollectionMode.Forced, true, true);
+
+            //running the dragrace
+            var tStart = DateTime.UtcNow;
+            var passes = 0;
+            SieveStride8Blocks sieve = null;
+
+            while ((DateTime.UtcNow - tStart).TotalSeconds < 5)
+            {
+                sieve = new SieveStride8Blocks(sieveSize);
                 sieve.RunSieve();
                 passes++;
             }

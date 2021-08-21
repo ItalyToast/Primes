@@ -8,7 +8,7 @@ namespace PrimeSieveCS
 {
     class SieveDenseAndSparse : ISieve
     {
-        public readonly uint sieveSize = 0;
+        readonly uint sieveSize = 0;
         readonly uint halfLimit;
         readonly ulong[] bits;
 
