@@ -105,6 +105,7 @@ The collection of solutions in this repository have come to use different approa
 | [faithfulness](#faithfulness) | If the implementation is true to the original one implemented by @davepl, at a technical level. |
 | [parallelism](#parallelism) | If the implementation uses any type of multi-threaded processing/calculation. |
 | [storage](#flag-storage) | The number of bits used to indicate if a number in the sieve is a prime number, or not. |
+| [block_size](#block-size) | If the implementation is processing the sieve in segments. |
 
 These characteristics are discussed in more detail in the following sections.
 
@@ -292,6 +293,33 @@ If you choose to include badges in your `README.md`, then:
   ```
   ![Bit count](https://img.shields.io/badge/Bits-unknown-yellowgreen)
   ```
+
+### Block size
+
+This characteristic specifies how big the block size is in bytes. This only applies to block based solutions.
+
+The algorithm is considered block based if it is processing the sieve in segments.
+
+Example:
+```
+for (i = start; i<= sievesize;){
+  var blockEnd = Min(i + blockSize, sievesize)
+  for(j = i; j < blockEnd; j += factor * 2){
+    ClearBit(sieve, j)
+  }
+}
+```
+
+Special values:
+| Number | Used when |
+|-|-|
+| -1 | The blocksize is automatically resolved during JIT or runtime. |
+| 0 | The solution is not block based. | 
+
+#### Tag
+
+The [output tag](#output) to express block size is `block_size`. If an implementation doesn't write a `block_size` tag to output, it is considered to not be a block based algorithm.
+
 
 ## Output
 
