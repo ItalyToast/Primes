@@ -48,11 +48,12 @@ namespace PrimeSieveCS
 
             const int sieveSize = 1_000_000;
 
+            RunSieve(default(SieveDenseAndSparseV2Runner), sieveSize);
             RunSieve(default(SieveDenseAndSparseRunner), sieveSize);
-            RunSieve(default(SieveStride8Runner), sieveSize);
-            RunSieve(default(SieveStride8Blocks16kRunner), sieveSize);
-            RunSieve(default(SieveStride8Blocks32kRunner), sieveSize);
-            RunSieve(default(SieveStride8Blocks64kRunner), sieveSize);
+            //RunSieve(default(SieveStride8Runner), sieveSize);
+            //RunSieve(default(SieveStride8Blocks16kRunner), sieveSize);
+            //RunSieve(default(SieveStride8Blocks32kRunner), sieveSize);
+            //RunSieve(default(SieveStride8Blocks64kRunner), sieveSize);
         }
 
         static void RunSieve<TRunner>(TRunner runner, uint sieveSize) where TRunner : ISieveRunner
