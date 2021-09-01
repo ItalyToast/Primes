@@ -48,7 +48,7 @@ namespace PrimeSieveCS
 
             const int sieveSize = 1_000_000;
 
-            RunSieve(default(SieveDenseAndSparseV2Runner), sieveSize);
+            RunSieve(default(SieveUnrolledT4HybridRunner), sieveSize);
             RunSieve(default(SieveDenseAndSparseRunner), sieveSize);
             //RunSieve(default(SieveStride8Runner), sieveSize);
             //RunSieve(default(SieveStride8Blocks16kRunner), sieveSize);

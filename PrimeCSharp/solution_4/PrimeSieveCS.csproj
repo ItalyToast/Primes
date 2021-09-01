@@ -14,17 +14,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="Dense.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Dense.tt</DependentUpon>
-    </None>
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="Dense.tt">
+    <None Update="Unrolled.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>Dense.cs</LastGenOutput>
+      <LastGenOutput>Unrolled.cs</LastGenOutput>
     </None>
   </ItemGroup>
 
@@ -37,6 +29,11 @@
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>Dense.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Unrolled.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Unrolled.tt</DependentUpon>
     </Compile>
   </ItemGroup>
 

@@ -7,22 +7,22 @@ using System.Linq;
 
 namespace PrimeSieveCS
 {
-    readonly struct SieveDenseAndSparseV2Runner : ISieveRunner
+    readonly struct SieveUnrolledT4HybridRunner : ISieveRunner
     {
-        public ISieve RunSieve(uint sieveSize) => new SieveDenseAndSparseV2(sieveSize).RunSieve();
+        public ISieve RunSieve(uint sieveSize) => new SieveUnrolledT4Hybrid(sieveSize).RunSieve();
     }
 
-    class SieveDenseAndSparseV2 : ISieve
+    class SieveUnrolledT4Hybrid : ISieve
     {
         readonly uint sieveSize;
         readonly uint halfLimit;
         readonly ulong[] bits;
 
-        public string Name => "italytoast-dense-and-sparsev2";
+        public string Name => "italytoast-UnrolledT4-hybrid";
 
         public uint SieveSize => sieveSize;
 
-        public SieveDenseAndSparseV2(uint size)
+        public SieveUnrolledT4Hybrid(uint size)
         {
             const int wordBits = sizeof(ulong) * 8;
 
@@ -148,7 +148,7 @@ namespace PrimeSieveCS
         /// Calculate the primes up to the specified limit
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
-        unsafe public SieveDenseAndSparseV2 RunSieve()
+        unsafe public SieveUnrolledT4Hybrid RunSieve()
         {
             uint factor = 3;
             uint halfFactor = factor >> 1;
@@ -182,7 +182,7 @@ namespace PrimeSieveCS
                     //Half factor of 20 seems to be optimal. (~3 bits / ulong) 
                     if (factor < 20)
                     {
-                        Dense.ClearFactor(factor, (byte*)ptr, halfLimit);
+                        Unrolled.ClearFactor(factor, (byte*)ptr, halfLimit);
                         //ClearBitsDense((byte*)ptr, (factor * factor) / 2, factor, halfLimit);
                         //ClearBitsSparse(ptr, (factor * factor) / 2, factor, halfLimit);
                     }
@@ -191,6 +191,10 @@ namespace PrimeSieveCS
                         ClearBitsSparseUnrolled4Rev(ptr, (factor * factor) / 2, factor, halfLimit);
                     }
                 }
+            //var refprime = new SieveStride8(1000000).RunSieve().EnumeratePrimes().ToList();
+
+            //var myprimes = EnumeratePrimes().ToHashSet();
+            //myprimes.ExceptWith(refprime);
             return this;
         }
     }
