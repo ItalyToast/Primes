@@ -91,6 +91,63 @@ namespace PrimeSieveCS
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        unsafe static void ClearBitsStride8BlocksUnrolledV2(byte* ptr, uint start, uint factor, uint limit, uint blocksize)
+        {
+            Span<uint> masks = stackalloc uint[8];
+            Span<ulong> offsets = stackalloc ulong[8];
+
+            for (int i = 0; i < 8; i++)
+            {
+                var s = start + factor * i;
+                masks[i] = (byte)(1 << ((int)s % 8));
+                offsets[i] = (ulong)((s) / 8 - start / 8);
+            }
+
+            var ptrStart = ptr + start / 8;
+            var ptrEnd = ptr + limit / 8 + 1;
+
+            
+            var p0 = ptrStart + offsets[0];
+            var p1 = ptrStart + offsets[1];
+            var p2 = ptrStart + offsets[2];
+            var p3 = ptrStart + offsets[3];
+            var p4 = ptrStart + offsets[4];
+            var p5 = ptrStart + offsets[5];
+            var p6 = ptrStart + offsets[6];
+            var p7 = ptrStart + offsets[7];
+
+
+            while (p0 <= ptrEnd - factor)
+            {
+                p0[0] |= (byte)masks[0];
+                p1[0] |= (byte)masks[1];
+                p2[0] |= (byte)masks[2];
+                p3[0] |= (byte)masks[3];
+                p4[0] |= (byte)masks[4];
+                p5[0] |= (byte)masks[5];
+                p6[0] |= (byte)masks[6];
+                p7[0] |= (byte)masks[7];
+
+                p0 += factor;
+                p1 += factor;
+                p2 += factor;
+                p3 += factor;
+                p4 += factor;
+                p5 += factor;
+                p6 += factor;
+                p7 += factor;
+            }
+
+            for (int i = 0; i < 8; i++)
+            {
+                p0[offsets[i]] |= (byte)masks[i];
+                if (p0 + offsets[i] > ptrEnd) break;
+            }
+
+
+        }
+
         /// <summary>
         /// Calculate the primes up to the specified limit
         /// </summary>
@@ -135,10 +192,9 @@ namespace PrimeSieveCS
                     }
                     else
                     {
-                        ClearBitsStride8BlocksUnrolled((byte*)ptr, (factor * factor) / 2, factor, halfLimit, 0x4000);
+                        ClearBitsStride8BlocksUnrolledV2((byte*)ptr, (factor * factor) / 2, factor, halfLimit, 0x4000);
                     }
                 }
-            //14000
             //var refprime = new SieveStride8(1000000).RunSieve().EnumeratePrimes().ToList();
 
             //var myprimes = EnumeratePrimes().ToHashSet();
