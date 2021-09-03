@@ -9,7 +9,7 @@ namespace PrimeSieveCS
 { 
 	class Unrolled
 	{
-		public static unsafe void ClearFactor(uint factor, byte* ptr, uint limit){
+		public static unsafe void ClearFactor(uint factor, ulong* ptr, uint limit){
 			switch(factor){
 				case 3: ClearFactor3(ptr, limit); break;
 				case 5: ClearFactor5(ptr, limit); break;
@@ -20,296 +20,1822 @@ namespace PrimeSieveCS
 				case 15: ClearFactor15(ptr, limit); break;
 				case 17: ClearFactor17(ptr, limit); break;
 				case 19: ClearFactor19(ptr, limit); break;
+				case 21: ClearFactor21(ptr, limit); break;
+				case 23: ClearFactor23(ptr, limit); break;
+				case 25: ClearFactor25(ptr, limit); break;
+				case 27: ClearFactor27(ptr, limit); break;
+				case 29: ClearFactor29(ptr, limit); break;
 			}
 		}
 
-		public static unsafe void ClearFactor3(byte* ptr, uint limit){
-			var startPtr = ptr;
-			var endPtr = ptr + limit / 8 + 1;
-			while (startPtr < endPtr - 3){
-				startPtr[0] |= 16;
-				startPtr[0] |= 128;
-				startPtr[1] |= 4;
-				startPtr[1] |= 32;
-				startPtr[2] |= 1;
-				startPtr[2] |= 8;
-				startPtr[2] |= 64;
-				startPtr[3] |= 2;
+		public static unsafe void ClearFactor3(ulong* ptr, uint limit)
+		{
+			var startPtr = ptr + 0;
+			var endPtr = ptr + limit / 64 + 1;
+			ulong mask = 0;
+
+			mask |= 0x10;
+			mask |= 0x80;
+			mask |= 0x400;
+			mask |= 0x2000;
+			mask |= 0x10000;
+			mask |= 0x80000;
+			mask |= 0x400000;
+			mask |= 0x2000000;
+			mask |= 0x10000000;
+			mask |= 0x80000000;
+			mask |= 0x400000000;
+			mask |= 0x2000000000;
+			mask |= 0x10000000000;
+			mask |= 0x80000000000;
+			mask |= 0x400000000000;
+			mask |= 0x2000000000000;
+			mask |= 0x10000000000000;
+			mask |= 0x80000000000000;
+			mask |= 0x400000000000000;
+			mask |= 0x2000000000000000;
+			startPtr[0] |= mask;
+			startPtr++;
+
+			while (startPtr < endPtr){  //- 3){
+				mask = 0;
+				mask |= 0x1;
+				mask |= 0x8;
+				mask |= 0x40;
+				mask |= 0x200;
+				mask |= 0x1000;
+				mask |= 0x8000;
+				mask |= 0x40000;
+				mask |= 0x200000;
+				mask |= 0x1000000;
+				mask |= 0x8000000;
+				mask |= 0x40000000;
+				mask |= 0x200000000;
+				mask |= 0x1000000000;
+				mask |= 0x8000000000;
+				mask |= 0x40000000000;
+				mask |= 0x200000000000;
+				mask |= 0x1000000000000;
+				mask |= 0x8000000000000;
+				mask |= 0x40000000000000;
+				mask |= 0x200000000000000;
+				mask |= 0x1000000000000000;
+				mask |= 0x8000000000000000;
+				startPtr[0] |= mask;
+				
+				mask = 0;
+				mask |= 0x4;
+				mask |= 0x20;
+				mask |= 0x100;
+				mask |= 0x800;
+				mask |= 0x4000;
+				mask |= 0x20000;
+				mask |= 0x100000;
+				mask |= 0x800000;
+				mask |= 0x4000000;
+				mask |= 0x20000000;
+				mask |= 0x100000000;
+				mask |= 0x800000000;
+				mask |= 0x4000000000;
+				mask |= 0x20000000000;
+				mask |= 0x100000000000;
+				mask |= 0x800000000000;
+				mask |= 0x4000000000000;
+				mask |= 0x20000000000000;
+				mask |= 0x100000000000000;
+				mask |= 0x800000000000000;
+				mask |= 0x4000000000000000;
+				startPtr[1] |= mask;
+				
+				mask = 0;
+				mask |= 0x2;
+				mask |= 0x10;
+				mask |= 0x80;
+				mask |= 0x400;
+				mask |= 0x2000;
+				mask |= 0x10000;
+				mask |= 0x80000;
+				mask |= 0x400000;
+				mask |= 0x2000000;
+				mask |= 0x10000000;
+				mask |= 0x80000000;
+				mask |= 0x400000000;
+				mask |= 0x2000000000;
+				mask |= 0x10000000000;
+				mask |= 0x80000000000;
+				mask |= 0x400000000000;
+				mask |= 0x2000000000000;
+				mask |= 0x10000000000000;
+				mask |= 0x80000000000000;
+				mask |= 0x400000000000000;
+				mask |= 0x2000000000000000;
+				startPtr[2] |= mask;
+				
 				startPtr += 3;
 			}
+		}
+		public static unsafe void ClearFactor5(ulong* ptr, uint limit)
+		{
+			var startPtr = ptr + 0;
+			var endPtr = ptr + limit / 64 + 1;
+			ulong mask = 0;
 
-			if(startPtr + 0 > endPtr)return;
-			startPtr[0] |= 16;
-			if(startPtr + 0 > endPtr)return;
-			startPtr[0] |= 128;
-			if(startPtr + 1 > endPtr)return;
-			startPtr[1] |= 4;
-			if(startPtr + 1 > endPtr)return;
-			startPtr[1] |= 32;
-			if(startPtr + 2 > endPtr)return;
-			startPtr[2] |= 1;
-			if(startPtr + 2 > endPtr)return;
-			startPtr[2] |= 8;
-			if(startPtr + 2 > endPtr)return;
-			startPtr[2] |= 64;
-			if(startPtr + 3 > endPtr)return;
-			startPtr[3] |= 2;
-			}
-			public static unsafe void ClearFactor5(byte* ptr, uint limit){
-			var startPtr = ptr;
-			var endPtr = ptr + limit / 8 + 1;
-			while (startPtr < endPtr - 6){
-				startPtr[1] |= 16;
-				startPtr[2] |= 2;
-				startPtr[2] |= 64;
-				startPtr[3] |= 8;
-				startPtr[4] |= 1;
-				startPtr[4] |= 32;
-				startPtr[5] |= 4;
-				startPtr[5] |= 128;
+			mask |= 0x1000;
+			mask |= 0x20000;
+			mask |= 0x400000;
+			mask |= 0x8000000;
+			mask |= 0x100000000;
+			mask |= 0x2000000000;
+			mask |= 0x40000000000;
+			mask |= 0x800000000000;
+			mask |= 0x10000000000000;
+			mask |= 0x200000000000000;
+			mask |= 0x4000000000000000;
+			startPtr[0] |= mask;
+			startPtr++;
+
+			while (startPtr < endPtr){  //- 5){
+				mask = 0;
+				mask |= 0x8;
+				mask |= 0x100;
+				mask |= 0x2000;
+				mask |= 0x40000;
+				mask |= 0x800000;
+				mask |= 0x10000000;
+				mask |= 0x200000000;
+				mask |= 0x4000000000;
+				mask |= 0x80000000000;
+				mask |= 0x1000000000000;
+				mask |= 0x20000000000000;
+				mask |= 0x400000000000000;
+				mask |= 0x8000000000000000;
+				startPtr[0] |= mask;
+				
+				mask = 0;
+				mask |= 0x10;
+				mask |= 0x200;
+				mask |= 0x4000;
+				mask |= 0x80000;
+				mask |= 0x1000000;
+				mask |= 0x20000000;
+				mask |= 0x400000000;
+				mask |= 0x8000000000;
+				mask |= 0x100000000000;
+				mask |= 0x2000000000000;
+				mask |= 0x40000000000000;
+				mask |= 0x800000000000000;
+				startPtr[1] |= mask;
+				
+				mask = 0;
+				mask |= 0x1;
+				mask |= 0x20;
+				mask |= 0x400;
+				mask |= 0x8000;
+				mask |= 0x100000;
+				mask |= 0x2000000;
+				mask |= 0x40000000;
+				mask |= 0x800000000;
+				mask |= 0x10000000000;
+				mask |= 0x200000000000;
+				mask |= 0x4000000000000;
+				mask |= 0x80000000000000;
+				mask |= 0x1000000000000000;
+				startPtr[2] |= mask;
+				
+				mask = 0;
+				mask |= 0x2;
+				mask |= 0x40;
+				mask |= 0x800;
+				mask |= 0x10000;
+				mask |= 0x200000;
+				mask |= 0x4000000;
+				mask |= 0x80000000;
+				mask |= 0x1000000000;
+				mask |= 0x20000000000;
+				mask |= 0x400000000000;
+				mask |= 0x8000000000000;
+				mask |= 0x100000000000000;
+				mask |= 0x2000000000000000;
+				startPtr[3] |= mask;
+				
+				mask = 0;
+				mask |= 0x4;
+				mask |= 0x80;
+				mask |= 0x1000;
+				mask |= 0x20000;
+				mask |= 0x400000;
+				mask |= 0x8000000;
+				mask |= 0x100000000;
+				mask |= 0x2000000000;
+				mask |= 0x40000000000;
+				mask |= 0x800000000000;
+				mask |= 0x10000000000000;
+				mask |= 0x200000000000000;
+				mask |= 0x4000000000000000;
+				startPtr[4] |= mask;
+				
 				startPtr += 5;
 			}
+		}
+		public static unsafe void ClearFactor7(ulong* ptr, uint limit)
+		{
+			var startPtr = ptr + 0;
+			var endPtr = ptr + limit / 64 + 1;
+			ulong mask = 0;
 
-			if(startPtr + 1 > endPtr)return;
-			startPtr[1] |= 16;
-			if(startPtr + 2 > endPtr)return;
-			startPtr[2] |= 2;
-			if(startPtr + 2 > endPtr)return;
-			startPtr[2] |= 64;
-			if(startPtr + 3 > endPtr)return;
-			startPtr[3] |= 8;
-			if(startPtr + 4 > endPtr)return;
-			startPtr[4] |= 1;
-			if(startPtr + 4 > endPtr)return;
-			startPtr[4] |= 32;
-			if(startPtr + 5 > endPtr)return;
-			startPtr[5] |= 4;
-			if(startPtr + 5 > endPtr)return;
-			startPtr[5] |= 128;
-			}
-			public static unsafe void ClearFactor7(byte* ptr, uint limit){
-			var startPtr = ptr;
-			var endPtr = ptr + limit / 8 + 1;
-			while (startPtr < endPtr - 10){
-				startPtr[3] |= 1;
-				startPtr[3] |= 128;
-				startPtr[4] |= 64;
-				startPtr[5] |= 32;
-				startPtr[6] |= 16;
-				startPtr[7] |= 8;
-				startPtr[8] |= 4;
-				startPtr[9] |= 2;
+			mask |= 0x1000000;
+			mask |= 0x80000000;
+			mask |= 0x4000000000;
+			mask |= 0x200000000000;
+			mask |= 0x10000000000000;
+			mask |= 0x800000000000000;
+			startPtr[0] |= mask;
+			startPtr++;
+
+			while (startPtr < endPtr){  //- 7){
+				mask = 0;
+				mask |= 0x4;
+				mask |= 0x200;
+				mask |= 0x10000;
+				mask |= 0x800000;
+				mask |= 0x40000000;
+				mask |= 0x2000000000;
+				mask |= 0x100000000000;
+				mask |= 0x8000000000000;
+				mask |= 0x400000000000000;
+				startPtr[0] |= mask;
+				
+				mask = 0;
+				mask |= 0x2;
+				mask |= 0x100;
+				mask |= 0x8000;
+				mask |= 0x400000;
+				mask |= 0x20000000;
+				mask |= 0x1000000000;
+				mask |= 0x80000000000;
+				mask |= 0x4000000000000;
+				mask |= 0x200000000000000;
+				startPtr[1] |= mask;
+				
+				mask = 0;
+				mask |= 0x1;
+				mask |= 0x80;
+				mask |= 0x4000;
+				mask |= 0x200000;
+				mask |= 0x10000000;
+				mask |= 0x800000000;
+				mask |= 0x40000000000;
+				mask |= 0x2000000000000;
+				mask |= 0x100000000000000;
+				mask |= 0x8000000000000000;
+				startPtr[2] |= mask;
+				
+				mask = 0;
+				mask |= 0x40;
+				mask |= 0x2000;
+				mask |= 0x100000;
+				mask |= 0x8000000;
+				mask |= 0x400000000;
+				mask |= 0x20000000000;
+				mask |= 0x1000000000000;
+				mask |= 0x80000000000000;
+				mask |= 0x4000000000000000;
+				startPtr[3] |= mask;
+				
+				mask = 0;
+				mask |= 0x20;
+				mask |= 0x1000;
+				mask |= 0x80000;
+				mask |= 0x4000000;
+				mask |= 0x200000000;
+				mask |= 0x10000000000;
+				mask |= 0x800000000000;
+				mask |= 0x40000000000000;
+				mask |= 0x2000000000000000;
+				startPtr[4] |= mask;
+				
+				mask = 0;
+				mask |= 0x10;
+				mask |= 0x800;
+				mask |= 0x40000;
+				mask |= 0x2000000;
+				mask |= 0x100000000;
+				mask |= 0x8000000000;
+				mask |= 0x400000000000;
+				mask |= 0x20000000000000;
+				mask |= 0x1000000000000000;
+				startPtr[5] |= mask;
+				
+				mask = 0;
+				mask |= 0x8;
+				mask |= 0x400;
+				mask |= 0x20000;
+				mask |= 0x1000000;
+				mask |= 0x80000000;
+				mask |= 0x4000000000;
+				mask |= 0x200000000000;
+				mask |= 0x10000000000000;
+				mask |= 0x800000000000000;
+				startPtr[6] |= mask;
+				
 				startPtr += 7;
 			}
+		}
+		public static unsafe void ClearFactor9(ulong* ptr, uint limit)
+		{
+			var startPtr = ptr + 0;
+			var endPtr = ptr + limit / 64 + 1;
+			ulong mask = 0;
 
-			if(startPtr + 3 > endPtr)return;
-			startPtr[3] |= 1;
-			if(startPtr + 3 > endPtr)return;
-			startPtr[3] |= 128;
-			if(startPtr + 4 > endPtr)return;
-			startPtr[4] |= 64;
-			if(startPtr + 5 > endPtr)return;
-			startPtr[5] |= 32;
-			if(startPtr + 6 > endPtr)return;
-			startPtr[6] |= 16;
-			if(startPtr + 7 > endPtr)return;
-			startPtr[7] |= 8;
-			if(startPtr + 8 > endPtr)return;
-			startPtr[8] |= 4;
-			if(startPtr + 9 > endPtr)return;
-			startPtr[9] |= 2;
-			}
-			public static unsafe void ClearFactor9(byte* ptr, uint limit){
-			var startPtr = ptr;
-			var endPtr = ptr + limit / 8 + 1;
-			while (startPtr < endPtr - 14){
-				startPtr[5] |= 1;
-				startPtr[6] |= 2;
-				startPtr[7] |= 4;
-				startPtr[8] |= 8;
-				startPtr[9] |= 16;
-				startPtr[10] |= 32;
-				startPtr[11] |= 64;
-				startPtr[12] |= 128;
+			mask |= 0x10000000000;
+			mask |= 0x2000000000000;
+			mask |= 0x400000000000000;
+			startPtr[0] |= mask;
+			startPtr++;
+
+			while (startPtr < endPtr){  //- 9){
+				mask = 0;
+				mask |= 0x8;
+				mask |= 0x1000;
+				mask |= 0x200000;
+				mask |= 0x40000000;
+				mask |= 0x8000000000;
+				mask |= 0x1000000000000;
+				mask |= 0x200000000000000;
+				startPtr[0] |= mask;
+				
+				mask = 0;
+				mask |= 0x4;
+				mask |= 0x800;
+				mask |= 0x100000;
+				mask |= 0x20000000;
+				mask |= 0x4000000000;
+				mask |= 0x800000000000;
+				mask |= 0x100000000000000;
+				startPtr[1] |= mask;
+				
+				mask = 0;
+				mask |= 0x2;
+				mask |= 0x400;
+				mask |= 0x80000;
+				mask |= 0x10000000;
+				mask |= 0x2000000000;
+				mask |= 0x400000000000;
+				mask |= 0x80000000000000;
+				startPtr[2] |= mask;
+				
+				mask = 0;
+				mask |= 0x1;
+				mask |= 0x200;
+				mask |= 0x40000;
+				mask |= 0x8000000;
+				mask |= 0x1000000000;
+				mask |= 0x200000000000;
+				mask |= 0x40000000000000;
+				mask |= 0x8000000000000000;
+				startPtr[3] |= mask;
+				
+				mask = 0;
+				mask |= 0x100;
+				mask |= 0x20000;
+				mask |= 0x4000000;
+				mask |= 0x800000000;
+				mask |= 0x100000000000;
+				mask |= 0x20000000000000;
+				mask |= 0x4000000000000000;
+				startPtr[4] |= mask;
+				
+				mask = 0;
+				mask |= 0x80;
+				mask |= 0x10000;
+				mask |= 0x2000000;
+				mask |= 0x400000000;
+				mask |= 0x80000000000;
+				mask |= 0x10000000000000;
+				mask |= 0x2000000000000000;
+				startPtr[5] |= mask;
+				
+				mask = 0;
+				mask |= 0x40;
+				mask |= 0x8000;
+				mask |= 0x1000000;
+				mask |= 0x200000000;
+				mask |= 0x40000000000;
+				mask |= 0x8000000000000;
+				mask |= 0x1000000000000000;
+				startPtr[6] |= mask;
+				
+				mask = 0;
+				mask |= 0x20;
+				mask |= 0x4000;
+				mask |= 0x800000;
+				mask |= 0x100000000;
+				mask |= 0x20000000000;
+				mask |= 0x4000000000000;
+				mask |= 0x800000000000000;
+				startPtr[7] |= mask;
+				
+				mask = 0;
+				mask |= 0x10;
+				mask |= 0x2000;
+				mask |= 0x400000;
+				mask |= 0x80000000;
+				mask |= 0x10000000000;
+				mask |= 0x2000000000000;
+				mask |= 0x400000000000000;
+				startPtr[8] |= mask;
+				
 				startPtr += 9;
 			}
+		}
+		public static unsafe void ClearFactor11(ulong* ptr, uint limit)
+		{
+			var startPtr = ptr + 0;
+			var endPtr = ptr + limit / 64 + 1;
+			ulong mask = 0;
 
-			if(startPtr + 5 > endPtr)return;
-			startPtr[5] |= 1;
-			if(startPtr + 6 > endPtr)return;
-			startPtr[6] |= 2;
-			if(startPtr + 7 > endPtr)return;
-			startPtr[7] |= 4;
-			if(startPtr + 8 > endPtr)return;
-			startPtr[8] |= 8;
-			if(startPtr + 9 > endPtr)return;
-			startPtr[9] |= 16;
-			if(startPtr + 10 > endPtr)return;
-			startPtr[10] |= 32;
-			if(startPtr + 11 > endPtr)return;
-			startPtr[11] |= 64;
-			if(startPtr + 12 > endPtr)return;
-			startPtr[12] |= 128;
-			}
-			public static unsafe void ClearFactor11(byte* ptr, uint limit){
-			var startPtr = ptr;
-			var endPtr = ptr + limit / 8 + 1;
-			while (startPtr < endPtr - 18){
-				startPtr[7] |= 16;
-				startPtr[8] |= 128;
-				startPtr[10] |= 4;
-				startPtr[11] |= 32;
-				startPtr[13] |= 1;
-				startPtr[14] |= 8;
-				startPtr[15] |= 64;
-				startPtr[17] |= 2;
+			mask |= 0x1000000000000000;
+			startPtr[0] |= mask;
+			startPtr++;
+
+			while (startPtr < endPtr){  //- 11){
+				mask = 0;
+				mask |= 0x80;
+				mask |= 0x40000;
+				mask |= 0x20000000;
+				mask |= 0x10000000000;
+				mask |= 0x8000000000000;
+				mask |= 0x4000000000000000;
+				startPtr[0] |= mask;
+				
+				mask = 0;
+				mask |= 0x200;
+				mask |= 0x100000;
+				mask |= 0x80000000;
+				mask |= 0x40000000000;
+				mask |= 0x20000000000000;
+				startPtr[1] |= mask;
+				
+				mask = 0;
+				mask |= 0x1;
+				mask |= 0x800;
+				mask |= 0x400000;
+				mask |= 0x200000000;
+				mask |= 0x100000000000;
+				mask |= 0x80000000000000;
+				startPtr[2] |= mask;
+				
+				mask = 0;
+				mask |= 0x4;
+				mask |= 0x2000;
+				mask |= 0x1000000;
+				mask |= 0x800000000;
+				mask |= 0x400000000000;
+				mask |= 0x200000000000000;
+				startPtr[3] |= mask;
+				
+				mask = 0;
+				mask |= 0x10;
+				mask |= 0x8000;
+				mask |= 0x4000000;
+				mask |= 0x2000000000;
+				mask |= 0x1000000000000;
+				mask |= 0x800000000000000;
+				startPtr[4] |= mask;
+				
+				mask = 0;
+				mask |= 0x40;
+				mask |= 0x20000;
+				mask |= 0x10000000;
+				mask |= 0x8000000000;
+				mask |= 0x4000000000000;
+				mask |= 0x2000000000000000;
+				startPtr[5] |= mask;
+				
+				mask = 0;
+				mask |= 0x100;
+				mask |= 0x80000;
+				mask |= 0x40000000;
+				mask |= 0x20000000000;
+				mask |= 0x10000000000000;
+				mask |= 0x8000000000000000;
+				startPtr[6] |= mask;
+				
+				mask = 0;
+				mask |= 0x400;
+				mask |= 0x200000;
+				mask |= 0x100000000;
+				mask |= 0x80000000000;
+				mask |= 0x40000000000000;
+				startPtr[7] |= mask;
+				
+				mask = 0;
+				mask |= 0x2;
+				mask |= 0x1000;
+				mask |= 0x800000;
+				mask |= 0x400000000;
+				mask |= 0x200000000000;
+				mask |= 0x100000000000000;
+				startPtr[8] |= mask;
+				
+				mask = 0;
+				mask |= 0x8;
+				mask |= 0x4000;
+				mask |= 0x2000000;
+				mask |= 0x1000000000;
+				mask |= 0x800000000000;
+				mask |= 0x400000000000000;
+				startPtr[9] |= mask;
+				
+				mask = 0;
+				mask |= 0x20;
+				mask |= 0x10000;
+				mask |= 0x8000000;
+				mask |= 0x4000000000;
+				mask |= 0x2000000000000;
+				mask |= 0x1000000000000000;
+				startPtr[10] |= mask;
+				
 				startPtr += 11;
 			}
+		}
+		public static unsafe void ClearFactor13(ulong* ptr, uint limit)
+		{
+			var startPtr = ptr + 1;
+			var endPtr = ptr + limit / 64 + 1;
+			ulong mask = 0;
 
-			if(startPtr + 7 > endPtr)return;
-			startPtr[7] |= 16;
-			if(startPtr + 8 > endPtr)return;
-			startPtr[8] |= 128;
-			if(startPtr + 10 > endPtr)return;
-			startPtr[10] |= 4;
-			if(startPtr + 11 > endPtr)return;
-			startPtr[11] |= 32;
-			if(startPtr + 13 > endPtr)return;
-			startPtr[13] |= 1;
-			if(startPtr + 14 > endPtr)return;
-			startPtr[14] |= 8;
-			if(startPtr + 15 > endPtr)return;
-			startPtr[15] |= 64;
-			if(startPtr + 17 > endPtr)return;
-			startPtr[17] |= 2;
-			}
-			public static unsafe void ClearFactor13(byte* ptr, uint limit){
-			var startPtr = ptr;
-			var endPtr = ptr + limit / 8 + 1;
-			while (startPtr < endPtr - 23){
-				startPtr[10] |= 16;
-				startPtr[12] |= 2;
-				startPtr[13] |= 64;
-				startPtr[15] |= 8;
-				startPtr[17] |= 1;
-				startPtr[18] |= 32;
-				startPtr[20] |= 4;
-				startPtr[21] |= 128;
+			mask |= 0x100000;
+			mask |= 0x200000000;
+			mask |= 0x400000000000;
+			mask |= 0x800000000000000;
+			startPtr[0] |= mask;
+			startPtr++;
+
+			while (startPtr < endPtr){  //- 14){
+				mask = 0;
+				mask |= 0x100;
+				mask |= 0x200000;
+				mask |= 0x400000000;
+				mask |= 0x800000000000;
+				mask |= 0x1000000000000000;
+				startPtr[0] |= mask;
+				
+				mask = 0;
+				mask |= 0x200;
+				mask |= 0x400000;
+				mask |= 0x800000000;
+				mask |= 0x1000000000000;
+				mask |= 0x2000000000000000;
+				startPtr[1] |= mask;
+				
+				mask = 0;
+				mask |= 0x400;
+				mask |= 0x800000;
+				mask |= 0x1000000000;
+				mask |= 0x2000000000000;
+				mask |= 0x4000000000000000;
+				startPtr[2] |= mask;
+				
+				mask = 0;
+				mask |= 0x800;
+				mask |= 0x1000000;
+				mask |= 0x2000000000;
+				mask |= 0x4000000000000;
+				mask |= 0x8000000000000000;
+				startPtr[3] |= mask;
+				
+				mask = 0;
+				mask |= 0x1000;
+				mask |= 0x2000000;
+				mask |= 0x4000000000;
+				mask |= 0x8000000000000;
+				startPtr[4] |= mask;
+				
+				mask = 0;
+				mask |= 0x1;
+				mask |= 0x2000;
+				mask |= 0x4000000;
+				mask |= 0x8000000000;
+				mask |= 0x10000000000000;
+				startPtr[5] |= mask;
+				
+				mask = 0;
+				mask |= 0x2;
+				mask |= 0x4000;
+				mask |= 0x8000000;
+				mask |= 0x10000000000;
+				mask |= 0x20000000000000;
+				startPtr[6] |= mask;
+				
+				mask = 0;
+				mask |= 0x4;
+				mask |= 0x8000;
+				mask |= 0x10000000;
+				mask |= 0x20000000000;
+				mask |= 0x40000000000000;
+				startPtr[7] |= mask;
+				
+				mask = 0;
+				mask |= 0x8;
+				mask |= 0x10000;
+				mask |= 0x20000000;
+				mask |= 0x40000000000;
+				mask |= 0x80000000000000;
+				startPtr[8] |= mask;
+				
+				mask = 0;
+				mask |= 0x10;
+				mask |= 0x20000;
+				mask |= 0x40000000;
+				mask |= 0x80000000000;
+				mask |= 0x100000000000000;
+				startPtr[9] |= mask;
+				
+				mask = 0;
+				mask |= 0x20;
+				mask |= 0x40000;
+				mask |= 0x80000000;
+				mask |= 0x100000000000;
+				mask |= 0x200000000000000;
+				startPtr[10] |= mask;
+				
+				mask = 0;
+				mask |= 0x40;
+				mask |= 0x80000;
+				mask |= 0x100000000;
+				mask |= 0x200000000000;
+				mask |= 0x400000000000000;
+				startPtr[11] |= mask;
+				
+				mask = 0;
+				mask |= 0x80;
+				mask |= 0x100000;
+				mask |= 0x200000000;
+				mask |= 0x400000000000;
+				mask |= 0x800000000000000;
+				startPtr[12] |= mask;
+				
 				startPtr += 13;
 			}
+		}
+		public static unsafe void ClearFactor15(ulong* ptr, uint limit)
+		{
+			var startPtr = ptr + 1;
+			var endPtr = ptr + limit / 64 + 1;
+			ulong mask = 0;
 
-			if(startPtr + 10 > endPtr)return;
-			startPtr[10] |= 16;
-			if(startPtr + 12 > endPtr)return;
-			startPtr[12] |= 2;
-			if(startPtr + 13 > endPtr)return;
-			startPtr[13] |= 64;
-			if(startPtr + 15 > endPtr)return;
-			startPtr[15] |= 8;
-			if(startPtr + 17 > endPtr)return;
-			startPtr[17] |= 1;
-			if(startPtr + 18 > endPtr)return;
-			startPtr[18] |= 32;
-			if(startPtr + 20 > endPtr)return;
-			startPtr[20] |= 4;
-			if(startPtr + 21 > endPtr)return;
-			startPtr[21] |= 128;
-			}
-			public static unsafe void ClearFactor15(byte* ptr, uint limit){
-			var startPtr = ptr;
-			var endPtr = ptr + limit / 8 + 1;
-			while (startPtr < endPtr - 29){
-				startPtr[14] |= 1;
-				startPtr[15] |= 128;
-				startPtr[17] |= 64;
-				startPtr[19] |= 32;
-				startPtr[21] |= 16;
-				startPtr[23] |= 8;
-				startPtr[25] |= 4;
-				startPtr[27] |= 2;
+			mask |= 0x1000000000000;
+			mask |= 0x8000000000000000;
+			startPtr[0] |= mask;
+			startPtr++;
+
+			while (startPtr < endPtr){  //- 16){
+				mask = 0;
+				mask |= 0x4000;
+				mask |= 0x20000000;
+				mask |= 0x100000000000;
+				mask |= 0x800000000000000;
+				startPtr[0] |= mask;
+				
+				mask = 0;
+				mask |= 0x400;
+				mask |= 0x2000000;
+				mask |= 0x10000000000;
+				mask |= 0x80000000000000;
+				startPtr[1] |= mask;
+				
+				mask = 0;
+				mask |= 0x40;
+				mask |= 0x200000;
+				mask |= 0x1000000000;
+				mask |= 0x8000000000000;
+				startPtr[2] |= mask;
+				
+				mask = 0;
+				mask |= 0x4;
+				mask |= 0x20000;
+				mask |= 0x100000000;
+				mask |= 0x800000000000;
+				mask |= 0x4000000000000000;
+				startPtr[3] |= mask;
+				
+				mask = 0;
+				mask |= 0x2000;
+				mask |= 0x10000000;
+				mask |= 0x80000000000;
+				mask |= 0x400000000000000;
+				startPtr[4] |= mask;
+				
+				mask = 0;
+				mask |= 0x200;
+				mask |= 0x1000000;
+				mask |= 0x8000000000;
+				mask |= 0x40000000000000;
+				startPtr[5] |= mask;
+				
+				mask = 0;
+				mask |= 0x20;
+				mask |= 0x100000;
+				mask |= 0x800000000;
+				mask |= 0x4000000000000;
+				startPtr[6] |= mask;
+				
+				mask = 0;
+				mask |= 0x2;
+				mask |= 0x10000;
+				mask |= 0x80000000;
+				mask |= 0x400000000000;
+				mask |= 0x2000000000000000;
+				startPtr[7] |= mask;
+				
+				mask = 0;
+				mask |= 0x1000;
+				mask |= 0x8000000;
+				mask |= 0x40000000000;
+				mask |= 0x200000000000000;
+				startPtr[8] |= mask;
+				
+				mask = 0;
+				mask |= 0x100;
+				mask |= 0x800000;
+				mask |= 0x4000000000;
+				mask |= 0x20000000000000;
+				startPtr[9] |= mask;
+				
+				mask = 0;
+				mask |= 0x10;
+				mask |= 0x80000;
+				mask |= 0x400000000;
+				mask |= 0x2000000000000;
+				startPtr[10] |= mask;
+				
+				mask = 0;
+				mask |= 0x1;
+				mask |= 0x8000;
+				mask |= 0x40000000;
+				mask |= 0x200000000000;
+				mask |= 0x1000000000000000;
+				startPtr[11] |= mask;
+				
+				mask = 0;
+				mask |= 0x800;
+				mask |= 0x4000000;
+				mask |= 0x20000000000;
+				mask |= 0x100000000000000;
+				startPtr[12] |= mask;
+				
+				mask = 0;
+				mask |= 0x80;
+				mask |= 0x400000;
+				mask |= 0x2000000000;
+				mask |= 0x10000000000000;
+				startPtr[13] |= mask;
+				
+				mask = 0;
+				mask |= 0x8;
+				mask |= 0x40000;
+				mask |= 0x200000000;
+				mask |= 0x1000000000000;
+				mask |= 0x8000000000000000;
+				startPtr[14] |= mask;
+				
 				startPtr += 15;
 			}
+		}
+		public static unsafe void ClearFactor17(ulong* ptr, uint limit)
+		{
+			var startPtr = ptr + 2;
+			var endPtr = ptr + limit / 64 + 1;
+			ulong mask = 0;
 
-			if(startPtr + 14 > endPtr)return;
-			startPtr[14] |= 1;
-			if(startPtr + 15 > endPtr)return;
-			startPtr[15] |= 128;
-			if(startPtr + 17 > endPtr)return;
-			startPtr[17] |= 64;
-			if(startPtr + 19 > endPtr)return;
-			startPtr[19] |= 32;
-			if(startPtr + 21 > endPtr)return;
-			startPtr[21] |= 16;
-			if(startPtr + 23 > endPtr)return;
-			startPtr[23] |= 8;
-			if(startPtr + 25 > endPtr)return;
-			startPtr[25] |= 4;
-			if(startPtr + 27 > endPtr)return;
-			startPtr[27] |= 2;
-			}
-			public static unsafe void ClearFactor17(byte* ptr, uint limit){
-			var startPtr = ptr;
-			var endPtr = ptr + limit / 8 + 1;
-			while (startPtr < endPtr - 35){
-				startPtr[18] |= 1;
-				startPtr[20] |= 2;
-				startPtr[22] |= 4;
-				startPtr[24] |= 8;
-				startPtr[26] |= 16;
-				startPtr[28] |= 32;
-				startPtr[30] |= 64;
-				startPtr[32] |= 128;
+			mask |= 0x10000;
+			mask |= 0x200000000;
+			mask |= 0x4000000000000;
+			startPtr[0] |= mask;
+			startPtr++;
+
+			while (startPtr < endPtr){  //- 19){
+				mask = 0;
+				mask |= 0x8;
+				mask |= 0x100000;
+				mask |= 0x2000000000;
+				mask |= 0x40000000000000;
+				startPtr[0] |= mask;
+				
+				mask = 0;
+				mask |= 0x80;
+				mask |= 0x1000000;
+				mask |= 0x20000000000;
+				mask |= 0x400000000000000;
+				startPtr[1] |= mask;
+				
+				mask = 0;
+				mask |= 0x800;
+				mask |= 0x10000000;
+				mask |= 0x200000000000;
+				mask |= 0x4000000000000000;
+				startPtr[2] |= mask;
+				
+				mask = 0;
+				mask |= 0x8000;
+				mask |= 0x100000000;
+				mask |= 0x2000000000000;
+				startPtr[3] |= mask;
+				
+				mask = 0;
+				mask |= 0x4;
+				mask |= 0x80000;
+				mask |= 0x1000000000;
+				mask |= 0x20000000000000;
+				startPtr[4] |= mask;
+				
+				mask = 0;
+				mask |= 0x40;
+				mask |= 0x800000;
+				mask |= 0x10000000000;
+				mask |= 0x200000000000000;
+				startPtr[5] |= mask;
+				
+				mask = 0;
+				mask |= 0x400;
+				mask |= 0x8000000;
+				mask |= 0x100000000000;
+				mask |= 0x2000000000000000;
+				startPtr[6] |= mask;
+				
+				mask = 0;
+				mask |= 0x4000;
+				mask |= 0x80000000;
+				mask |= 0x1000000000000;
+				startPtr[7] |= mask;
+				
+				mask = 0;
+				mask |= 0x2;
+				mask |= 0x40000;
+				mask |= 0x800000000;
+				mask |= 0x10000000000000;
+				startPtr[8] |= mask;
+				
+				mask = 0;
+				mask |= 0x20;
+				mask |= 0x400000;
+				mask |= 0x8000000000;
+				mask |= 0x100000000000000;
+				startPtr[9] |= mask;
+				
+				mask = 0;
+				mask |= 0x200;
+				mask |= 0x4000000;
+				mask |= 0x80000000000;
+				mask |= 0x1000000000000000;
+				startPtr[10] |= mask;
+				
+				mask = 0;
+				mask |= 0x2000;
+				mask |= 0x40000000;
+				mask |= 0x800000000000;
+				startPtr[11] |= mask;
+				
+				mask = 0;
+				mask |= 0x1;
+				mask |= 0x20000;
+				mask |= 0x400000000;
+				mask |= 0x8000000000000;
+				startPtr[12] |= mask;
+				
+				mask = 0;
+				mask |= 0x10;
+				mask |= 0x200000;
+				mask |= 0x4000000000;
+				mask |= 0x80000000000000;
+				startPtr[13] |= mask;
+				
+				mask = 0;
+				mask |= 0x100;
+				mask |= 0x2000000;
+				mask |= 0x40000000000;
+				mask |= 0x800000000000000;
+				startPtr[14] |= mask;
+				
+				mask = 0;
+				mask |= 0x1000;
+				mask |= 0x20000000;
+				mask |= 0x400000000000;
+				mask |= 0x8000000000000000;
+				startPtr[15] |= mask;
+				
+				mask = 0;
+				mask |= 0x10000;
+				mask |= 0x200000000;
+				mask |= 0x4000000000000;
+				startPtr[16] |= mask;
+				
 				startPtr += 17;
 			}
+		}
+		public static unsafe void ClearFactor19(ulong* ptr, uint limit)
+		{
+			var startPtr = ptr + 2;
+			var endPtr = ptr + limit / 64 + 1;
+			ulong mask = 0;
 
-			if(startPtr + 18 > endPtr)return;
-			startPtr[18] |= 1;
-			if(startPtr + 20 > endPtr)return;
-			startPtr[20] |= 2;
-			if(startPtr + 22 > endPtr)return;
-			startPtr[22] |= 4;
-			if(startPtr + 24 > endPtr)return;
-			startPtr[24] |= 8;
-			if(startPtr + 26 > endPtr)return;
-			startPtr[26] |= 16;
-			if(startPtr + 28 > endPtr)return;
-			startPtr[28] |= 32;
-			if(startPtr + 30 > endPtr)return;
-			startPtr[30] |= 64;
-			if(startPtr + 32 > endPtr)return;
-			startPtr[32] |= 128;
-			}
-			public static unsafe void ClearFactor19(byte* ptr, uint limit){
-			var startPtr = ptr;
-			var endPtr = ptr + limit / 8 + 1;
-			while (startPtr < endPtr - 41){
-				startPtr[22] |= 16;
-				startPtr[24] |= 128;
-				startPtr[27] |= 4;
-				startPtr[29] |= 32;
-				startPtr[32] |= 1;
-				startPtr[34] |= 8;
-				startPtr[36] |= 64;
-				startPtr[39] |= 2;
+			mask |= 0x10000000000000;
+			startPtr[0] |= mask;
+			startPtr++;
+
+			while (startPtr < endPtr){  //- 21){
+				mask = 0;
+				mask |= 0x80;
+				mask |= 0x4000000;
+				mask |= 0x200000000000;
+				startPtr[0] |= mask;
+				
+				mask = 0;
+				mask |= 0x1;
+				mask |= 0x80000;
+				mask |= 0x4000000000;
+				mask |= 0x200000000000000;
+				startPtr[1] |= mask;
+				
+				mask = 0;
+				mask |= 0x1000;
+				mask |= 0x80000000;
+				mask |= 0x4000000000000;
+				startPtr[2] |= mask;
+				
+				mask = 0;
+				mask |= 0x20;
+				mask |= 0x1000000;
+				mask |= 0x80000000000;
+				mask |= 0x4000000000000000;
+				startPtr[3] |= mask;
+				
+				mask = 0;
+				mask |= 0x20000;
+				mask |= 0x1000000000;
+				mask |= 0x80000000000000;
+				startPtr[4] |= mask;
+				
+				mask = 0;
+				mask |= 0x400;
+				mask |= 0x20000000;
+				mask |= 0x1000000000000;
+				startPtr[5] |= mask;
+				
+				mask = 0;
+				mask |= 0x8;
+				mask |= 0x400000;
+				mask |= 0x20000000000;
+				mask |= 0x1000000000000000;
+				startPtr[6] |= mask;
+				
+				mask = 0;
+				mask |= 0x8000;
+				mask |= 0x400000000;
+				mask |= 0x20000000000000;
+				startPtr[7] |= mask;
+				
+				mask = 0;
+				mask |= 0x100;
+				mask |= 0x8000000;
+				mask |= 0x400000000000;
+				startPtr[8] |= mask;
+				
+				mask = 0;
+				mask |= 0x2;
+				mask |= 0x100000;
+				mask |= 0x8000000000;
+				mask |= 0x400000000000000;
+				startPtr[9] |= mask;
+				
+				mask = 0;
+				mask |= 0x2000;
+				mask |= 0x100000000;
+				mask |= 0x8000000000000;
+				startPtr[10] |= mask;
+				
+				mask = 0;
+				mask |= 0x40;
+				mask |= 0x2000000;
+				mask |= 0x100000000000;
+				mask |= 0x8000000000000000;
+				startPtr[11] |= mask;
+				
+				mask = 0;
+				mask |= 0x40000;
+				mask |= 0x2000000000;
+				mask |= 0x100000000000000;
+				startPtr[12] |= mask;
+				
+				mask = 0;
+				mask |= 0x800;
+				mask |= 0x40000000;
+				mask |= 0x2000000000000;
+				startPtr[13] |= mask;
+				
+				mask = 0;
+				mask |= 0x10;
+				mask |= 0x800000;
+				mask |= 0x40000000000;
+				mask |= 0x2000000000000000;
+				startPtr[14] |= mask;
+				
+				mask = 0;
+				mask |= 0x10000;
+				mask |= 0x800000000;
+				mask |= 0x40000000000000;
+				startPtr[15] |= mask;
+				
+				mask = 0;
+				mask |= 0x200;
+				mask |= 0x10000000;
+				mask |= 0x800000000000;
+				startPtr[16] |= mask;
+				
+				mask = 0;
+				mask |= 0x4;
+				mask |= 0x200000;
+				mask |= 0x10000000000;
+				mask |= 0x800000000000000;
+				startPtr[17] |= mask;
+				
+				mask = 0;
+				mask |= 0x4000;
+				mask |= 0x200000000;
+				mask |= 0x10000000000000;
+				startPtr[18] |= mask;
+				
 				startPtr += 19;
 			}
+		}
+		public static unsafe void ClearFactor21(ulong* ptr, uint limit)
+		{
+			var startPtr = ptr + 3;
+			var endPtr = ptr + limit / 64 + 1;
+			ulong mask = 0;
 
-			if(startPtr + 22 > endPtr)return;
-			startPtr[22] |= 16;
-			if(startPtr + 24 > endPtr)return;
-			startPtr[24] |= 128;
-			if(startPtr + 27 > endPtr)return;
-			startPtr[27] |= 4;
-			if(startPtr + 29 > endPtr)return;
-			startPtr[29] |= 32;
-			if(startPtr + 32 > endPtr)return;
-			startPtr[32] |= 1;
-			if(startPtr + 34 > endPtr)return;
-			startPtr[34] |= 8;
-			if(startPtr + 36 > endPtr)return;
-			startPtr[36] |= 64;
-			if(startPtr + 39 > endPtr)return;
-			startPtr[39] |= 2;
+			mask |= 0x10000000;
+			mask |= 0x2000000000000;
+			startPtr[0] |= mask;
+			startPtr++;
+
+			while (startPtr < endPtr){  //- 24){
+				mask = 0;
+				mask |= 0x40;
+				mask |= 0x8000000;
+				mask |= 0x1000000000000;
+				startPtr[0] |= mask;
+				
+				mask = 0;
+				mask |= 0x20;
+				mask |= 0x4000000;
+				mask |= 0x800000000000;
+				startPtr[1] |= mask;
+				
+				mask = 0;
+				mask |= 0x10;
+				mask |= 0x2000000;
+				mask |= 0x400000000000;
+				startPtr[2] |= mask;
+				
+				mask = 0;
+				mask |= 0x8;
+				mask |= 0x1000000;
+				mask |= 0x200000000000;
+				startPtr[3] |= mask;
+				
+				mask = 0;
+				mask |= 0x4;
+				mask |= 0x800000;
+				mask |= 0x100000000000;
+				startPtr[4] |= mask;
+				
+				mask = 0;
+				mask |= 0x2;
+				mask |= 0x400000;
+				mask |= 0x80000000000;
+				startPtr[5] |= mask;
+				
+				mask = 0;
+				mask |= 0x1;
+				mask |= 0x200000;
+				mask |= 0x40000000000;
+				mask |= 0x8000000000000000;
+				startPtr[6] |= mask;
+				
+				mask = 0;
+				mask |= 0x100000;
+				mask |= 0x20000000000;
+				mask |= 0x4000000000000000;
+				startPtr[7] |= mask;
+				
+				mask = 0;
+				mask |= 0x80000;
+				mask |= 0x10000000000;
+				mask |= 0x2000000000000000;
+				startPtr[8] |= mask;
+				
+				mask = 0;
+				mask |= 0x40000;
+				mask |= 0x8000000000;
+				mask |= 0x1000000000000000;
+				startPtr[9] |= mask;
+				
+				mask = 0;
+				mask |= 0x20000;
+				mask |= 0x4000000000;
+				mask |= 0x800000000000000;
+				startPtr[10] |= mask;
+				
+				mask = 0;
+				mask |= 0x10000;
+				mask |= 0x2000000000;
+				mask |= 0x400000000000000;
+				startPtr[11] |= mask;
+				
+				mask = 0;
+				mask |= 0x8000;
+				mask |= 0x1000000000;
+				mask |= 0x200000000000000;
+				startPtr[12] |= mask;
+				
+				mask = 0;
+				mask |= 0x4000;
+				mask |= 0x800000000;
+				mask |= 0x100000000000000;
+				startPtr[13] |= mask;
+				
+				mask = 0;
+				mask |= 0x2000;
+				mask |= 0x400000000;
+				mask |= 0x80000000000000;
+				startPtr[14] |= mask;
+				
+				mask = 0;
+				mask |= 0x1000;
+				mask |= 0x200000000;
+				mask |= 0x40000000000000;
+				startPtr[15] |= mask;
+				
+				mask = 0;
+				mask |= 0x800;
+				mask |= 0x100000000;
+				mask |= 0x20000000000000;
+				startPtr[16] |= mask;
+				
+				mask = 0;
+				mask |= 0x400;
+				mask |= 0x80000000;
+				mask |= 0x10000000000000;
+				startPtr[17] |= mask;
+				
+				mask = 0;
+				mask |= 0x200;
+				mask |= 0x40000000;
+				mask |= 0x8000000000000;
+				startPtr[18] |= mask;
+				
+				mask = 0;
+				mask |= 0x100;
+				mask |= 0x20000000;
+				mask |= 0x4000000000000;
+				startPtr[19] |= mask;
+				
+				mask = 0;
+				mask |= 0x80;
+				mask |= 0x10000000;
+				mask |= 0x2000000000000;
+				startPtr[20] |= mask;
+				
+				startPtr += 21;
 			}
 		}
+		public static unsafe void ClearFactor23(ulong* ptr, uint limit)
+		{
+			var startPtr = ptr + 4;
+			var endPtr = ptr + limit / 64 + 1;
+			ulong mask = 0;
+
+			mask |= 0x100;
+			mask |= 0x80000000;
+			mask |= 0x40000000000000;
+			startPtr[0] |= mask;
+			startPtr++;
+
+			while (startPtr < endPtr){  //- 27){
+				mask = 0;
+				mask |= 0x2000;
+				mask |= 0x1000000000;
+				mask |= 0x800000000000000;
+				startPtr[0] |= mask;
+				
+				mask = 0;
+				mask |= 0x40000;
+				mask |= 0x20000000000;
+				startPtr[1] |= mask;
+				
+				mask = 0;
+				mask |= 0x1;
+				mask |= 0x800000;
+				mask |= 0x400000000000;
+				startPtr[2] |= mask;
+				
+				mask = 0;
+				mask |= 0x20;
+				mask |= 0x10000000;
+				mask |= 0x8000000000000;
+				startPtr[3] |= mask;
+				
+				mask = 0;
+				mask |= 0x400;
+				mask |= 0x200000000;
+				mask |= 0x100000000000000;
+				startPtr[4] |= mask;
+				
+				mask = 0;
+				mask |= 0x8000;
+				mask |= 0x4000000000;
+				mask |= 0x2000000000000000;
+				startPtr[5] |= mask;
+				
+				mask = 0;
+				mask |= 0x100000;
+				mask |= 0x80000000000;
+				startPtr[6] |= mask;
+				
+				mask = 0;
+				mask |= 0x4;
+				mask |= 0x2000000;
+				mask |= 0x1000000000000;
+				startPtr[7] |= mask;
+				
+				mask = 0;
+				mask |= 0x80;
+				mask |= 0x40000000;
+				mask |= 0x20000000000000;
+				startPtr[8] |= mask;
+				
+				mask = 0;
+				mask |= 0x1000;
+				mask |= 0x800000000;
+				mask |= 0x400000000000000;
+				startPtr[9] |= mask;
+				
+				mask = 0;
+				mask |= 0x20000;
+				mask |= 0x10000000000;
+				mask |= 0x8000000000000000;
+				startPtr[10] |= mask;
+				
+				mask = 0;
+				mask |= 0x400000;
+				mask |= 0x200000000000;
+				startPtr[11] |= mask;
+				
+				mask = 0;
+				mask |= 0x10;
+				mask |= 0x8000000;
+				mask |= 0x4000000000000;
+				startPtr[12] |= mask;
+				
+				mask = 0;
+				mask |= 0x200;
+				mask |= 0x100000000;
+				mask |= 0x80000000000000;
+				startPtr[13] |= mask;
+				
+				mask = 0;
+				mask |= 0x4000;
+				mask |= 0x2000000000;
+				mask |= 0x1000000000000000;
+				startPtr[14] |= mask;
+				
+				mask = 0;
+				mask |= 0x80000;
+				mask |= 0x40000000000;
+				startPtr[15] |= mask;
+				
+				mask = 0;
+				mask |= 0x2;
+				mask |= 0x1000000;
+				mask |= 0x800000000000;
+				startPtr[16] |= mask;
+				
+				mask = 0;
+				mask |= 0x40;
+				mask |= 0x20000000;
+				mask |= 0x10000000000000;
+				startPtr[17] |= mask;
+				
+				mask = 0;
+				mask |= 0x800;
+				mask |= 0x400000000;
+				mask |= 0x200000000000000;
+				startPtr[18] |= mask;
+				
+				mask = 0;
+				mask |= 0x10000;
+				mask |= 0x8000000000;
+				mask |= 0x4000000000000000;
+				startPtr[19] |= mask;
+				
+				mask = 0;
+				mask |= 0x200000;
+				mask |= 0x100000000000;
+				startPtr[20] |= mask;
+				
+				mask = 0;
+				mask |= 0x8;
+				mask |= 0x4000000;
+				mask |= 0x2000000000000;
+				startPtr[21] |= mask;
+				
+				mask = 0;
+				mask |= 0x100;
+				mask |= 0x80000000;
+				mask |= 0x40000000000000;
+				startPtr[22] |= mask;
+				
+				startPtr += 23;
+			}
+		}
+		public static unsafe void ClearFactor25(ulong* ptr, uint limit)
+		{
+			var startPtr = ptr + 4;
+			var endPtr = ptr + limit / 64 + 1;
+			ulong mask = 0;
+
+			mask |= 0x100000000000000;
+			startPtr[0] |= mask;
+			startPtr++;
+
+			while (startPtr < endPtr){  //- 29){
+				mask = 0;
+				mask |= 0x20000;
+				mask |= 0x40000000000;
+				startPtr[0] |= mask;
+				
+				mask = 0;
+				mask |= 0x8;
+				mask |= 0x10000000;
+				mask |= 0x20000000000000;
+				startPtr[1] |= mask;
+				
+				mask = 0;
+				mask |= 0x4000;
+				mask |= 0x8000000000;
+				startPtr[2] |= mask;
+				
+				mask = 0;
+				mask |= 0x1;
+				mask |= 0x2000000;
+				mask |= 0x4000000000000;
+				startPtr[3] |= mask;
+				
+				mask = 0;
+				mask |= 0x800;
+				mask |= 0x1000000000;
+				mask |= 0x2000000000000000;
+				startPtr[4] |= mask;
+				
+				mask = 0;
+				mask |= 0x400000;
+				mask |= 0x800000000000;
+				startPtr[5] |= mask;
+				
+				mask = 0;
+				mask |= 0x100;
+				mask |= 0x200000000;
+				mask |= 0x400000000000000;
+				startPtr[6] |= mask;
+				
+				mask = 0;
+				mask |= 0x80000;
+				mask |= 0x100000000000;
+				startPtr[7] |= mask;
+				
+				mask = 0;
+				mask |= 0x20;
+				mask |= 0x40000000;
+				mask |= 0x80000000000000;
+				startPtr[8] |= mask;
+				
+				mask = 0;
+				mask |= 0x10000;
+				mask |= 0x20000000000;
+				startPtr[9] |= mask;
+				
+				mask = 0;
+				mask |= 0x4;
+				mask |= 0x8000000;
+				mask |= 0x10000000000000;
+				startPtr[10] |= mask;
+				
+				mask = 0;
+				mask |= 0x2000;
+				mask |= 0x4000000000;
+				mask |= 0x8000000000000000;
+				startPtr[11] |= mask;
+				
+				mask = 0;
+				mask |= 0x1000000;
+				mask |= 0x2000000000000;
+				startPtr[12] |= mask;
+				
+				mask = 0;
+				mask |= 0x400;
+				mask |= 0x800000000;
+				mask |= 0x1000000000000000;
+				startPtr[13] |= mask;
+				
+				mask = 0;
+				mask |= 0x200000;
+				mask |= 0x400000000000;
+				startPtr[14] |= mask;
+				
+				mask = 0;
+				mask |= 0x80;
+				mask |= 0x100000000;
+				mask |= 0x200000000000000;
+				startPtr[15] |= mask;
+				
+				mask = 0;
+				mask |= 0x40000;
+				mask |= 0x80000000000;
+				startPtr[16] |= mask;
+				
+				mask = 0;
+				mask |= 0x10;
+				mask |= 0x20000000;
+				mask |= 0x40000000000000;
+				startPtr[17] |= mask;
+				
+				mask = 0;
+				mask |= 0x8000;
+				mask |= 0x10000000000;
+				startPtr[18] |= mask;
+				
+				mask = 0;
+				mask |= 0x2;
+				mask |= 0x4000000;
+				mask |= 0x8000000000000;
+				startPtr[19] |= mask;
+				
+				mask = 0;
+				mask |= 0x1000;
+				mask |= 0x2000000000;
+				mask |= 0x4000000000000000;
+				startPtr[20] |= mask;
+				
+				mask = 0;
+				mask |= 0x800000;
+				mask |= 0x1000000000000;
+				startPtr[21] |= mask;
+				
+				mask = 0;
+				mask |= 0x200;
+				mask |= 0x400000000;
+				mask |= 0x800000000000000;
+				startPtr[22] |= mask;
+				
+				mask = 0;
+				mask |= 0x100000;
+				mask |= 0x200000000000;
+				startPtr[23] |= mask;
+				
+				mask = 0;
+				mask |= 0x40;
+				mask |= 0x80000000;
+				mask |= 0x100000000000000;
+				startPtr[24] |= mask;
+				
+				startPtr += 25;
+			}
+		}
+		public static unsafe void ClearFactor27(ulong* ptr, uint limit)
+		{
+			var startPtr = ptr + 5;
+			var endPtr = ptr + limit / 64 + 1;
+			ulong mask = 0;
+
+			mask |= 0x100000000000;
+			startPtr[0] |= mask;
+			startPtr++;
+
+			while (startPtr < endPtr){  //- 32){
+				mask = 0;
+				mask |= 0x80;
+				mask |= 0x400000000;
+				mask |= 0x2000000000000000;
+				startPtr[0] |= mask;
+				
+				mask = 0;
+				mask |= 0x1000000;
+				mask |= 0x8000000000000;
+				startPtr[1] |= mask;
+				
+				mask = 0;
+				mask |= 0x4000;
+				mask |= 0x20000000000;
+				startPtr[2] |= mask;
+				
+				mask = 0;
+				mask |= 0x10;
+				mask |= 0x80000000;
+				mask |= 0x400000000000000;
+				startPtr[3] |= mask;
+				
+				mask = 0;
+				mask |= 0x200000;
+				mask |= 0x1000000000000;
+				startPtr[4] |= mask;
+				
+				mask = 0;
+				mask |= 0x800;
+				mask |= 0x4000000000;
+				startPtr[5] |= mask;
+				
+				mask = 0;
+				mask |= 0x2;
+				mask |= 0x10000000;
+				mask |= 0x80000000000000;
+				startPtr[6] |= mask;
+				
+				mask = 0;
+				mask |= 0x40000;
+				mask |= 0x200000000000;
+				startPtr[7] |= mask;
+				
+				mask = 0;
+				mask |= 0x100;
+				mask |= 0x800000000;
+				mask |= 0x4000000000000000;
+				startPtr[8] |= mask;
+				
+				mask = 0;
+				mask |= 0x2000000;
+				mask |= 0x10000000000000;
+				startPtr[9] |= mask;
+				
+				mask = 0;
+				mask |= 0x8000;
+				mask |= 0x40000000000;
+				startPtr[10] |= mask;
+				
+				mask = 0;
+				mask |= 0x20;
+				mask |= 0x100000000;
+				mask |= 0x800000000000000;
+				startPtr[11] |= mask;
+				
+				mask = 0;
+				mask |= 0x400000;
+				mask |= 0x2000000000000;
+				startPtr[12] |= mask;
+				
+				mask = 0;
+				mask |= 0x1000;
+				mask |= 0x8000000000;
+				startPtr[13] |= mask;
+				
+				mask = 0;
+				mask |= 0x4;
+				mask |= 0x20000000;
+				mask |= 0x100000000000000;
+				startPtr[14] |= mask;
+				
+				mask = 0;
+				mask |= 0x80000;
+				mask |= 0x400000000000;
+				startPtr[15] |= mask;
+				
+				mask = 0;
+				mask |= 0x200;
+				mask |= 0x1000000000;
+				mask |= 0x8000000000000000;
+				startPtr[16] |= mask;
+				
+				mask = 0;
+				mask |= 0x4000000;
+				mask |= 0x20000000000000;
+				startPtr[17] |= mask;
+				
+				mask = 0;
+				mask |= 0x10000;
+				mask |= 0x80000000000;
+				startPtr[18] |= mask;
+				
+				mask = 0;
+				mask |= 0x40;
+				mask |= 0x200000000;
+				mask |= 0x1000000000000000;
+				startPtr[19] |= mask;
+				
+				mask = 0;
+				mask |= 0x800000;
+				mask |= 0x4000000000000;
+				startPtr[20] |= mask;
+				
+				mask = 0;
+				mask |= 0x2000;
+				mask |= 0x10000000000;
+				startPtr[21] |= mask;
+				
+				mask = 0;
+				mask |= 0x8;
+				mask |= 0x40000000;
+				mask |= 0x200000000000000;
+				startPtr[22] |= mask;
+				
+				mask = 0;
+				mask |= 0x100000;
+				mask |= 0x800000000000;
+				startPtr[23] |= mask;
+				
+				mask = 0;
+				mask |= 0x400;
+				mask |= 0x2000000000;
+				startPtr[24] |= mask;
+				
+				mask = 0;
+				mask |= 0x1;
+				mask |= 0x8000000;
+				mask |= 0x40000000000000;
+				startPtr[25] |= mask;
+				
+				mask = 0;
+				mask |= 0x20000;
+				mask |= 0x100000000000;
+				startPtr[26] |= mask;
+				
+				startPtr += 27;
+			}
+		}
+		public static unsafe void ClearFactor29(ulong* ptr, uint limit)
+		{
+			var startPtr = ptr + 6;
+			var endPtr = ptr + limit / 64 + 1;
+			ulong mask = 0;
+
+			mask |= 0x1000000000;
+			startPtr[0] |= mask;
+			startPtr++;
+
+			while (startPtr < endPtr){  //- 35){
+				mask = 0;
+				mask |= 0x2;
+				mask |= 0x40000000;
+				mask |= 0x800000000000000;
+				startPtr[0] |= mask;
+				
+				mask = 0;
+				mask |= 0x1000000;
+				mask |= 0x20000000000000;
+				startPtr[1] |= mask;
+				
+				mask = 0;
+				mask |= 0x40000;
+				mask |= 0x800000000000;
+				startPtr[2] |= mask;
+				
+				mask = 0;
+				mask |= 0x1000;
+				mask |= 0x20000000000;
+				startPtr[3] |= mask;
+				
+				mask = 0;
+				mask |= 0x40;
+				mask |= 0x800000000;
+				startPtr[4] |= mask;
+				
+				mask = 0;
+				mask |= 0x1;
+				mask |= 0x20000000;
+				mask |= 0x400000000000000;
+				startPtr[5] |= mask;
+				
+				mask = 0;
+				mask |= 0x800000;
+				mask |= 0x10000000000000;
+				startPtr[6] |= mask;
+				
+				mask = 0;
+				mask |= 0x20000;
+				mask |= 0x400000000000;
+				startPtr[7] |= mask;
+				
+				mask = 0;
+				mask |= 0x800;
+				mask |= 0x10000000000;
+				startPtr[8] |= mask;
+				
+				mask = 0;
+				mask |= 0x20;
+				mask |= 0x400000000;
+				mask |= 0x8000000000000000;
+				startPtr[9] |= mask;
+				
+				mask = 0;
+				mask |= 0x10000000;
+				mask |= 0x200000000000000;
+				startPtr[10] |= mask;
+				
+				mask = 0;
+				mask |= 0x400000;
+				mask |= 0x8000000000000;
+				startPtr[11] |= mask;
+				
+				mask = 0;
+				mask |= 0x10000;
+				mask |= 0x200000000000;
+				startPtr[12] |= mask;
+				
+				mask = 0;
+				mask |= 0x400;
+				mask |= 0x8000000000;
+				startPtr[13] |= mask;
+				
+				mask = 0;
+				mask |= 0x10;
+				mask |= 0x200000000;
+				mask |= 0x4000000000000000;
+				startPtr[14] |= mask;
+				
+				mask = 0;
+				mask |= 0x8000000;
+				mask |= 0x100000000000000;
+				startPtr[15] |= mask;
+				
+				mask = 0;
+				mask |= 0x200000;
+				mask |= 0x4000000000000;
+				startPtr[16] |= mask;
+				
+				mask = 0;
+				mask |= 0x8000;
+				mask |= 0x100000000000;
+				startPtr[17] |= mask;
+				
+				mask = 0;
+				mask |= 0x200;
+				mask |= 0x4000000000;
+				startPtr[18] |= mask;
+				
+				mask = 0;
+				mask |= 0x8;
+				mask |= 0x100000000;
+				mask |= 0x2000000000000000;
+				startPtr[19] |= mask;
+				
+				mask = 0;
+				mask |= 0x4000000;
+				mask |= 0x80000000000000;
+				startPtr[20] |= mask;
+				
+				mask = 0;
+				mask |= 0x100000;
+				mask |= 0x2000000000000;
+				startPtr[21] |= mask;
+				
+				mask = 0;
+				mask |= 0x4000;
+				mask |= 0x80000000000;
+				startPtr[22] |= mask;
+				
+				mask = 0;
+				mask |= 0x100;
+				mask |= 0x2000000000;
+				startPtr[23] |= mask;
+				
+				mask = 0;
+				mask |= 0x4;
+				mask |= 0x80000000;
+				mask |= 0x1000000000000000;
+				startPtr[24] |= mask;
+				
+				mask = 0;
+				mask |= 0x2000000;
+				mask |= 0x40000000000000;
+				startPtr[25] |= mask;
+				
+				mask = 0;
+				mask |= 0x80000;
+				mask |= 0x1000000000000;
+				startPtr[26] |= mask;
+				
+				mask = 0;
+				mask |= 0x2000;
+				mask |= 0x40000000000;
+				startPtr[27] |= mask;
+				
+				mask = 0;
+				mask |= 0x80;
+				mask |= 0x1000000000;
+				startPtr[28] |= mask;
+				
+				startPtr += 29;
+			}
+		}
+	}
 }

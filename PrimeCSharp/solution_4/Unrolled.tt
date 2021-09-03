@@ -15,34 +15,53 @@ namespace PrimeSieveCS
 { 
 	class Unrolled
 	{
-		public static unsafe void ClearFactor(uint factor, byte* ptr, uint limit){
+		public static unsafe void ClearFactor(uint factor, ulong* ptr, uint limit){
 			switch(factor){
-<#				for(int factor = 3; factor<= 20; factor+=2) { #>
+<#				for(int factor = 3; factor<= 30; factor+=2) { #>
 				case <#= factor #>: ClearFactor<#= factor #>(ptr, limit); break;
 <#				} #>
 			}
 		}
 
 <#		
-		for(int factor = 3; factor<= 20; factor+=2) { 
+		for(int factor = 3; factor<= 30; factor+=2) { 
 		var start =  (factor * factor) / 2;
 #>
-		public static unsafe void ClearFactor<#= factor #>(byte* ptr, uint limit){
-			var startPtr = ptr;
-			var endPtr = ptr + limit / 8 + 1;
-			while (startPtr < endPtr - <#= ((start + 8 * factor)) / 8#>){
-<#		for(int stride = 0; stride < 8; stride++) { #>
-				startPtr[<#= ((start + stride * factor)) / 8#>] |= <#= 1 << ((start + stride * factor) % 8) #>;
-<#		} #>
+		public static unsafe void ClearFactor<#= factor #>(ulong* ptr, uint limit)
+		{
+			var startPtr = ptr + <#= start / 64 #>;
+			var endPtr = ptr + limit / 64 + 1;
+			ulong mask = 0;
+
+<# 
+	int mask   = start % 64;
+	int offset = 0;
+	int stride = 0;
+
+	for(;mask < 64; mask += factor) { #>
+			mask |= 0x<#= (1UL << mask).ToString("X") #>;
+<# } #>
+			startPtr[0] |= mask;
+			startPtr++;
+
+			while (startPtr < endPtr){  //- <#= ((start + 64 * factor)) / 64 #>){
+<# 
+	mask -= 64;
+	while(stride < 64) { #>
+				mask = 0;
+<# 		for(;mask < 64; mask += factor, stride++) { #>
+				mask |= 0x<#= (1UL << mask).ToString("X") #>;
+<# } #>
+				startPtr[<#= offset #>] |= mask;
+				
+<#  
+	mask -= 64;
+	offset++;
+	} 
+#>
 				startPtr += <#= factor #>;
 			}
-
-<#			for(int stride = 0; stride < 8; stride++) { #>
-			if(startPtr + <#= (start + stride * factor) / 8#> > endPtr)return;
-			startPtr[<#= ((start + stride * factor)) / 8#>] |= <#= 1 << ((start + stride * factor) % 8) #>;
-<#			} #>
-			}
-	<#	} 
-	#>
+		}
+<#		} #>
 	}
 }

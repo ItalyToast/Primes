@@ -51,7 +51,7 @@ namespace PrimeSieveCS
             RunSieve(default(SieveUnrolledT4HybridRunner), sieveSize);
             RunSieve(default(SieveDenseAndSparseRunner), sieveSize);
             //RunSieve(default(SieveStride8Runner), sieveSize);
-            //RunSieve(default(SieveStride8Blocks16kRunner), sieveSize);
+            RunSieve(default(SieveStride8Blocks16kRunner), sieveSize);
             //RunSieve(default(SieveStride8Blocks32kRunner), sieveSize);
             //RunSieve(default(SieveStride8Blocks64kRunner), sieveSize);
         }

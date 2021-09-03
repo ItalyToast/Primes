@@ -28,7 +28,7 @@ namespace PrimeSieveCS
 
             sieveSize = size;
             halfLimit = (size + 1) / 2;
-            bits = new ulong[(int)(halfLimit / wordBits + 1)];
+            bits = new ulong[(int)(halfLimit / wordBits + 100)];
         }
 
         public IEnumerable<uint> EnumeratePrimes()
@@ -39,108 +39,55 @@ namespace PrimeSieveCS
                     yield return num;
         }
 
-        /// <summary>
-        /// A clear bits function thats using pointers so we dont need to store the index in a register.
-        /// 
-        /// We do need to do a sub for each comparison in the outer loop. 
-        /// There might be a faster version we can make with an index if we reverse it.
-        /// </summary>
-        unsafe static void ClearBitsDense(byte* ptr, uint start, uint factor, uint limit)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        unsafe static void ClearBitsStride8BlocksUnrolled(byte* ptr, uint start, uint factor, uint limit, uint blocksize)
         {
-            Debug.Assert(factor < 64, "factor cant be bigger than 63, that will cause incorrect calcualtions. This is optimized for lower factors");
-
-            //Performance: we want factor and offset as an int so we can dodge a SUB in the while comparison in the inner loop
-
-            var ptrStart = ptr + start / 8;
-            var ptrEnd = ptr + limit / 8 + 1;
-
-            byte*[] ptrs = new byte*[8];
-            Span<(byte, byte)> lut = stackalloc (byte, byte)[8];
-            for (int stride = 0; stride < 8; stride++)
+            Span<(uint, byte)> strides = stackalloc (uint, byte)[8];
+            for (uint i = 0; i < 8; i++)
             {
-                var offset2 = (byte)((start + factor * stride) / 8);
-                var mask = (byte)(1 << ((int)(start + factor * stride) % 8));
-                lut[stride] = (offset2, mask);
+                var s = start + factor * i;
+                strides[(int)i] = (s / 8, (byte)(1 << ((int)s % 8)));
             }
 
-            while (ptrStart <= ptrEnd - factor)
-            {
-                ptrStart[0] |= 0x1;
-                var (o0, m0) = lut[0];
-                ptrStart[o0] |= m0;
-                var (o1, m1) = lut[1];
-                ptrStart[o1] |= m1;
-                var (o2, m2) = lut[2];
-                ptrStart[o2] |= m2;
-                var (o3, m3) = lut[3];
-                ptrStart[o3] |= m3;
-                var (o4, m4) = lut[4];
-                ptrStart[o4] |= m4;
-                var (o5, m5) = lut[5];
-                ptrStart[o5] |= m5;
-                var (o6, m6) = lut[6];
-                ptrStart[o6] |= m6;
-                var (o7, m7) = lut[7];
-                ptrStart[o7] |= m7;
-                ptrStart += factor;
-            }
+            var bytecount = limit / 8;
+            var blockStart = start / 8;
 
-            for (int i = 0; i < 8; i++)
+            while (blockStart <= bytecount)
             {
-                var (o0, m0) = lut[i];
-                if (ptrStart + o0 > ptrEnd)
+                for (int stride = 0; stride < 8; stride++)
                 {
-                    break;
+                    var (index, mask) = strides[stride];
+                    var blockEnd = Math.Min(bytecount + 1, index + blocksize);
+                    var blockEndPtr = ptr + blockEnd;
+
+                    var i0 = ptr + index;
+                    var i1 = ptr + index + factor;
+                    var i2 = ptr + index + factor * 2;
+                    var i3 = ptr + index + factor * 3;
+
+                    uint factor4 = factor * 4;
+                    for (; i3 < blockEndPtr;)
+                    {
+                        i0[0] |= mask;
+                        i1[0] |= mask;
+                        i2[0] |= mask;
+                        i3[0] |= mask;
+
+                        i0 += factor4;
+                        i1 += factor4;
+                        i2 += factor4;
+                        i3 += factor4;
+                    }
+
+                    for (; i0 < blockEndPtr; i0 += factor)
+                    {
+                        i0[0] |= mask;
+                    }
+
+                    strides[stride] = ((uint)(i0 - ptr), mask);
                 }
-                ptrStart[o0] |= m0;
-            }
-        }
 
-        //Note: this is not actually used
-        //it is the reference for the unrolled version: ClearBitsSparseUnrolled4Rev
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        unsafe static void ClearBitsSparse(ulong* ptr, uint start, uint factor, uint limit)
-        {
-            for (uint index = start; index < limit; index += factor)
-            {
-                ptr[index / 64] |= 1UL << (int)(index % 64);
-            }
-        }
-
-        /// <summary>
-        /// Unrolled version of ClearBitsSparse.
-        /// 
-        /// Provided by mike-barber. Reversed version by ItalyToast
-        /// </summary>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        unsafe static void ClearBitsSparseUnrolled4Rev(ulong* ptr, uint start, uint factor, uint limit)
-        {
-            uint bitsset = (limit - start) / factor;
-            int iter = (int)bitsset;
-
-            var i0 = start;
-            var i1 = start + factor;
-            var i2 = start + factor * 2;
-            var i3 = start + factor * 3;
-
-            var factor4 = factor * 4;
-            for (iter -= 4; iter > 0; iter -= 4)
-            {
-                ptr[i0 / 64] |= 1ul << (int)(i0 % 64);
-                ptr[i1 / 64] |= 1ul << (int)(i1 % 64);
-                ptr[i2 / 64] |= 1ul << (int)(i2 % 64);
-                ptr[i3 / 64] |= 1ul << (int)(i3 % 64);
-
-                i0 += factor4;
-                i1 += factor4;
-                i2 += factor4;
-                i3 += factor4;
-            }
-
-            for (iter += 4; iter >= 0; iter--)
-            {
-                ptr[i0 / 64] |= 1ul << (int)(i0 % 64);
-                i0 += factor;
+                blockStart += blocksize;
             }
         }
 
@@ -182,15 +129,16 @@ namespace PrimeSieveCS
                     //Half factor of 20 seems to be optimal. (~3 bits / ulong) 
                     if (factor < 20)
                     {
-                        Unrolled.ClearFactor(factor, (byte*)ptr, halfLimit);
+                        Unrolled.ClearFactor(factor, ptr, halfLimit);
                         //ClearBitsDense((byte*)ptr, (factor * factor) / 2, factor, halfLimit);
                         //ClearBitsSparse(ptr, (factor * factor) / 2, factor, halfLimit);
                     }
                     else
                     {
-                        ClearBitsSparseUnrolled4Rev(ptr, (factor * factor) / 2, factor, halfLimit);
+                        ClearBitsStride8BlocksUnrolled((byte*)ptr, (factor * factor) / 2, factor, halfLimit, 0x4000);
                     }
                 }
+            //14000
             //var refprime = new SieveStride8(1000000).RunSieve().EnumeratePrimes().ToList();
 
             //var myprimes = EnumeratePrimes().ToHashSet();
