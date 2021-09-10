@@ -117,6 +117,10 @@ namespace PrimeSieveCS
             var p6 = ptrStart + offsets[6];
             var p7 = ptrStart + offsets[7];
 
+            //Looks like the C# compiler have trouble combining it to a single ORB.
+            //This was the best unrolled version I got working
+            //--ItalyToast
+
             var m0 = (byte)masks[0];
             var m1 = (byte)masks[1];
             var m2 = (byte)masks[2];
@@ -152,8 +156,6 @@ namespace PrimeSieveCS
                 p0[offsets[i]] |= (byte)masks[i];
                 if (p0 + offsets[i] > ptrEnd) break;
             }
-
-
         }
 
         /// <summary>
@@ -190,18 +192,15 @@ namespace PrimeSieveCS
 
                     if (halfFactor > halfRoot) break;
 
-                    //marking with a rolling mask if we can get enough bits in the ulong.
-                    //Half factor of 20 seems to be optimal. (~3 bits / ulong) 
-                    if (factor < 20)
+                    //marking with generated code for the smaller factors 
+                    if (factor < 64)
                     {
-                        Unrolled.ClearFactor(factor, ptr, halfLimit);
-                        //ClearBitsDense((byte*)ptr, (factor * factor) / 2, factor, halfLimit);
-                        //ClearBitsSparse(ptr, (factor * factor) / 2, factor, halfLimit);
+                        UnrolledDense.ClearFactor(factor, ptr, halfLimit);
                     }
-                    else if (factor < 64)
-                    {
-                        UnrolledSparse.ClearFactor(factor, ptr, halfLimit);
-                    }
+                    //else if (factor < 64)
+                    //{
+                    //    UnrolledSparse.ClearFactor(factor, ptr, halfLimit);
+                    //}
                     else
                     {
                         ClearBitsStride8BlocksUnrolledV2((byte*)ptr, (factor * factor) / 2, factor, halfLimit, 0x4000);

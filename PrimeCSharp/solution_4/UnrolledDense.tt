@@ -13,26 +13,31 @@ using System.Runtime.CompilerServices;
 
 namespace PrimeSieveCS
 { 
-	class Unrolled
+	class UnrolledDense
 	{
+		/// <summary>
+        /// Clears the factors using generated code up to a factor of 63
+        /// </summary>
 		public static unsafe void ClearFactor(uint factor, ulong* ptr, uint limit){
 			switch(factor){
-<#				for(int factor = 3; factor<= 30; factor+=2) { #>
+<#				for(int factor = 3; factor<= 64; factor+=2) { #>
 				case <#= factor #>: ClearFactor<#= factor #>(ptr, limit); break;
 <#				} #>
+				default: throw new ArgumentOutOfRangeException("factor");
 			}
 		}
 
 <#		
-		for(int factor = 3; factor<= 30; factor+=2) { 
+		for(int factor = 3; factor<= 64; factor+=2) { 
 		var start =  (factor * factor) / 2;
 #>
+		[MethodImpl(MethodImplOptions.AggressiveOptimization)]
 		public static unsafe void ClearFactor<#= factor #>(ulong* ptr, uint limit)
 		{
 			var startPtr = ptr + <#= start / 64 #>;
 			var endPtr = ptr + limit / 64 + 1;
-			ulong mask = 0;
 
+			ulong mask = startPtr[0];
 <# 
 	int mask   = start % 64;
 	int offset = 0;
@@ -41,14 +46,14 @@ namespace PrimeSieveCS
 	for(;mask < 64; mask += factor) { #>
 			mask |= 0x<#= (1UL << mask).ToString("X") #>;
 <# } #>
-			startPtr[0] |= mask;
+			startPtr[0] = mask;
 			startPtr++;
 
 			while (startPtr <= endPtr){  //- <#= ((start + 64 * factor)) / 64 #>){
 <# 
 	mask -= 64;
 	while(stride < 64) { #>
-				mask = 0;
+				mask = startPtr[<#= offset #>];
 <# 		for(;mask < 64; mask += factor, stride++) { #>
 				mask |= 0x<#= (1UL << mask).ToString("X") #>;
 <# } #>

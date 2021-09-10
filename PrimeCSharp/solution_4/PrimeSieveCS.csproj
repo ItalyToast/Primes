@@ -18,9 +18,9 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>UnrolledSparse.cs</LastGenOutput>
     </None>
-    <None Update="Unrolled.tt">
+    <None Update="UnrolledDense.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>Unrolled.cs</LastGenOutput>
+      <LastGenOutput>UnrolledDense.cs</LastGenOutput>
     </None>
   </ItemGroup>
 
@@ -34,10 +34,10 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Dense.tt</DependentUpon>
     </Compile>
-    <Compile Update="Unrolled.cs">
+    <Compile Update="UnrolledDense.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
-      <DependentUpon>Unrolled.tt</DependentUpon>
+      <DependentUpon>UnrolledDense.tt</DependentUpon>
     </Compile>
     <Compile Update="UnrolledSparse.cs">
       <DesignTime>True</DesignTime>

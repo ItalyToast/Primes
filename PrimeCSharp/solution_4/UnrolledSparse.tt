@@ -17,14 +17,14 @@ namespace PrimeSieveCS
 	{
 		public static unsafe void ClearFactor(uint factor, ulong* ptr, uint limit){
 			switch(factor){
-<#				for(int factor = 21; factor<= 100; factor++) { #>
+<#				for(int factor = 21; factor<= 100; factor+=2) { #>
 				case <#= factor #>: ClearFactor<#= factor #>((byte*)ptr, limit); break;
 <#				} #>
 			}
 		}
 
 <#		
-		for(int factor = 21; factor<= 100; factor+=1) { 
+		for(int factor = 21; factor<= 100; factor+=2) { 
 		var start =  (factor * factor) / 2;
 #>
 		public static unsafe void ClearFactor<#= factor #>(byte* ptr, uint limit)
