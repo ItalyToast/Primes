@@ -40,59 +40,7 @@ namespace PrimeSieveCS
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        unsafe static void ClearBitsStride8BlocksUnrolled(byte* ptr, uint start, uint factor, uint limit, uint blocksize)
-        {
-            Span<(uint, byte)> strides = stackalloc (uint, byte)[8];
-            for (uint i = 0; i < 8; i++)
-            {
-                var s = start + factor * i;
-                strides[(int)i] = (s / 8, (byte)(1 << ((int)s % 8)));
-            }
-
-            var bytecount = limit / 8;
-            var blockStart = start / 8;
-
-            while (blockStart <= bytecount)
-            {
-                for (int stride = 0; stride < 8; stride++)
-                {
-                    var (index, mask) = strides[stride];
-                    var blockEnd = Math.Min(bytecount + 1, index + blocksize);
-                    var blockEndPtr = ptr + blockEnd;
-
-                    var i0 = ptr + index;
-                    var i1 = ptr + index + factor;
-                    var i2 = ptr + index + factor * 2;
-                    var i3 = ptr + index + factor * 3;
-
-                    uint factor4 = factor * 4;
-                    for (; i3 < blockEndPtr;)
-                    {
-                        i0[0] |= mask;
-                        i1[0] |= mask;
-                        i2[0] |= mask;
-                        i3[0] |= mask;
-
-                        i0 += factor4;
-                        i1 += factor4;
-                        i2 += factor4;
-                        i3 += factor4;
-                    }
-
-                    for (; i0 < blockEndPtr; i0 += factor)
-                    {
-                        i0[0] |= mask;
-                    }
-
-                    strides[stride] = ((uint)(i0 - ptr), mask);
-                }
-
-                blockStart += blocksize;
-            }
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        unsafe static void ClearBitsStride8BlocksUnrolledV2(byte* ptr, uint start, uint factor, uint limit, uint blocksize)
+        unsafe static void ClearBitsUnrolled(byte* ptr, uint start, uint factor, uint limit, uint blocksize)
         {
             byte* masks = stackalloc byte[8];
             Span<ulong> offsets = stackalloc ulong[8];
@@ -197,13 +145,13 @@ namespace PrimeSieveCS
                     {
                         UnrolledDense.ClearFactor(factor, ptr, halfLimit);
                     }
-                    //else if (factor < 64)
+                    //else if (factor < 1000)
                     //{
                     //    UnrolledSparse.ClearFactor(factor, ptr, halfLimit);
                     //}
                     else
                     {
-                        ClearBitsStride8BlocksUnrolledV2((byte*)ptr, (factor * factor) / 2, factor, halfLimit, 0x4000);
+                        ClearBitsUnrolled((byte*)ptr, (factor * factor) / 2, factor, halfLimit, 0x4000);
                     }
                 }
             //var refprime = new SieveStride8(1000000).RunSieve().EnumeratePrimes().ToList();

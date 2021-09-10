@@ -1,8 +1,5 @@
 ﻿
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Numerics;
 using System.Runtime.CompilerServices;
 
 namespace PrimeSieveCS
@@ -79,7 +76,7 @@ namespace PrimeSieveCS
 			startPtr[0] = mask;
 			startPtr++;
 
-			while (startPtr <= endPtr){  //- 3){
+			while (startPtr <= endPtr){
 				mask = startPtr[0];
 				mask |= 0x1;
 				mask |= 0x8;
@@ -177,7 +174,7 @@ namespace PrimeSieveCS
 			startPtr[0] = mask;
 			startPtr++;
 
-			while (startPtr <= endPtr){  //- 5){
+			while (startPtr <= endPtr){
 				mask = startPtr[0];
 				mask |= 0x8;
 				mask |= 0x100;
@@ -276,7 +273,7 @@ namespace PrimeSieveCS
 			startPtr[0] = mask;
 			startPtr++;
 
-			while (startPtr <= endPtr){  //- 7){
+			while (startPtr <= endPtr){
 				mask = startPtr[0];
 				mask |= 0x4;
 				mask |= 0x200;
@@ -378,7 +375,7 @@ namespace PrimeSieveCS
 			startPtr[0] = mask;
 			startPtr++;
 
-			while (startPtr <= endPtr){  //- 9){
+			while (startPtr <= endPtr){
 				mask = startPtr[0];
 				mask |= 0x8;
 				mask |= 0x1000;
@@ -484,7 +481,7 @@ namespace PrimeSieveCS
 			startPtr[0] = mask;
 			startPtr++;
 
-			while (startPtr <= endPtr){  //- 11){
+			while (startPtr <= endPtr){
 				mask = startPtr[0];
 				mask |= 0x80;
 				mask |= 0x40000;
@@ -599,7 +596,7 @@ namespace PrimeSieveCS
 			startPtr[0] = mask;
 			startPtr++;
 
-			while (startPtr <= endPtr){  //- 14){
+			while (startPtr <= endPtr){
 				mask = startPtr[0];
 				mask |= 0x100;
 				mask |= 0x200000;
@@ -718,7 +715,7 @@ namespace PrimeSieveCS
 			startPtr[0] = mask;
 			startPtr++;
 
-			while (startPtr <= endPtr){  //- 16){
+			while (startPtr <= endPtr){
 				mask = startPtr[0];
 				mask |= 0x4000;
 				mask |= 0x20000000;
@@ -844,7 +841,7 @@ namespace PrimeSieveCS
 			startPtr[0] = mask;
 			startPtr++;
 
-			while (startPtr <= endPtr){  //- 19){
+			while (startPtr <= endPtr){
 				mask = startPtr[0];
 				mask |= 0x8;
 				mask |= 0x100000;
@@ -974,7 +971,7 @@ namespace PrimeSieveCS
 			startPtr[0] = mask;
 			startPtr++;
 
-			while (startPtr <= endPtr){  //- 21){
+			while (startPtr <= endPtr){
 				mask = startPtr[0];
 				mask |= 0x80;
 				mask |= 0x4000000;
@@ -1111,7 +1108,7 @@ namespace PrimeSieveCS
 			startPtr[0] = mask;
 			startPtr++;
 
-			while (startPtr <= endPtr){  //- 24){
+			while (startPtr <= endPtr){
 				mask = startPtr[0];
 				mask |= 0x40;
 				mask |= 0x8000000;
@@ -1255,7 +1252,7 @@ namespace PrimeSieveCS
 			startPtr[0] = mask;
 			startPtr++;
 
-			while (startPtr <= endPtr){  //- 27){
+			while (startPtr <= endPtr){
 				mask = startPtr[0];
 				mask |= 0x2000;
 				mask |= 0x1000000000;
@@ -1403,7 +1400,7 @@ namespace PrimeSieveCS
 			startPtr[0] = mask;
 			startPtr++;
 
-			while (startPtr <= endPtr){  //- 29){
+			while (startPtr <= endPtr){
 				mask = startPtr[0];
 				mask |= 0x20000;
 				mask |= 0x40000000000;
@@ -1557,7 +1554,7 @@ namespace PrimeSieveCS
 			startPtr[0] = mask;
 			startPtr++;
 
-			while (startPtr <= endPtr){  //- 32){
+			while (startPtr <= endPtr){
 				mask = startPtr[0];
 				mask |= 0x80;
 				mask |= 0x400000000;
@@ -1717,7 +1714,7 @@ namespace PrimeSieveCS
 			startPtr[0] = mask;
 			startPtr++;
 
-			while (startPtr <= endPtr){  //- 35){
+			while (startPtr <= endPtr){
 				mask = startPtr[0];
 				mask |= 0x2;
 				mask |= 0x40000000;
@@ -1884,7 +1881,7 @@ namespace PrimeSieveCS
 			startPtr[0] = mask;
 			startPtr++;
 
-			while (startPtr <= endPtr){  //- 38){
+			while (startPtr <= endPtr){
 				mask = startPtr[0];
 				mask |= 0x40000000;
 				mask |= 0x2000000000000000;
@@ -2056,7 +2053,7 @@ namespace PrimeSieveCS
 			startPtr[0] = mask;
 			startPtr++;
 
-			while (startPtr <= endPtr){  //- 41){
+			while (startPtr <= endPtr){
 				mask = startPtr[0];
 				mask |= 0x2;
 				mask |= 0x400000000;
@@ -2234,7 +2231,7 @@ namespace PrimeSieveCS
 			startPtr[0] = mask;
 			startPtr++;
 
-			while (startPtr <= endPtr){  //- 44){
+			while (startPtr <= endPtr){
 				mask = startPtr[0];
 				mask |= 0x80;
 				mask |= 0x40000000000;
@@ -2418,7 +2415,7 @@ namespace PrimeSieveCS
 			startPtr[0] = mask;
 			startPtr++;
 
-			while (startPtr <= endPtr){  //- 47){
+			while (startPtr <= endPtr){
 				mask = startPtr[0];
 				mask |= 0x20000;
 				mask |= 0x40000000000000;
@@ -2608,7 +2605,7 @@ namespace PrimeSieveCS
 			startPtr[0] = mask;
 			startPtr++;
 
-			while (startPtr <= endPtr){  //- 50){
+			while (startPtr <= endPtr){
 				mask = startPtr[0];
 				mask |= 0x80000000;
 				startPtr[0] |= mask;
@@ -2805,7 +2802,7 @@ namespace PrimeSieveCS
 			startPtr[0] = mask;
 			startPtr++;
 
-			while (startPtr <= endPtr){  //- 54){
+			while (startPtr <= endPtr){
 				mask = startPtr[0];
 				mask |= 0x4000000;
 				startPtr[0] |= mask;
@@ -3007,7 +3004,7 @@ namespace PrimeSieveCS
 			startPtr[0] = mask;
 			startPtr++;
 
-			while (startPtr <= endPtr){  //- 57){
+			while (startPtr <= endPtr){
 				mask = startPtr[0];
 				mask |= 0x80;
 				mask |= 0x4000000000000;
@@ -3215,7 +3212,7 @@ namespace PrimeSieveCS
 			startPtr[0] = mask;
 			startPtr++;
 
-			while (startPtr <= endPtr){  //- 60){
+			while (startPtr <= endPtr){
 				mask = startPtr[0];
 				mask |= 0x200000000;
 				startPtr[0] |= mask;
@@ -3430,7 +3427,7 @@ namespace PrimeSieveCS
 			startPtr[0] = mask;
 			startPtr++;
 
-			while (startPtr <= endPtr){  //- 64){
+			while (startPtr <= endPtr){
 				mask = startPtr[0];
 				mask |= 0x400000000000;
 				startPtr[0] |= mask;
@@ -3650,7 +3647,7 @@ namespace PrimeSieveCS
 			startPtr[0] = mask;
 			startPtr++;
 
-			while (startPtr <= endPtr){  //- 67){
+			while (startPtr <= endPtr){
 				mask = startPtr[0];
 				mask |= 0x200000000;
 				startPtr[0] |= mask;
@@ -3876,7 +3873,7 @@ namespace PrimeSieveCS
 			startPtr[0] = mask;
 			startPtr++;
 
-			while (startPtr <= endPtr){  //- 71){
+			while (startPtr <= endPtr){
 				mask = startPtr[0];
 				mask |= 0x80;
 				mask |= 0x400000000000000;
@@ -4108,7 +4105,7 @@ namespace PrimeSieveCS
 			startPtr[0] = mask;
 			startPtr++;
 
-			while (startPtr <= endPtr){  //- 74){
+			while (startPtr <= endPtr){
 				mask = startPtr[0];
 				mask |= 0x2000000000000;
 				startPtr[0] |= mask;
@@ -4346,7 +4343,7 @@ namespace PrimeSieveCS
 			startPtr[0] = mask;
 			startPtr++;
 
-			while (startPtr <= endPtr){  //- 78){
+			while (startPtr <= endPtr){
 				mask = startPtr[0];
 				mask |= 0x80000000;
 				startPtr[0] |= mask;
@@ -4590,7 +4587,7 @@ namespace PrimeSieveCS
 			startPtr[0] = mask;
 			startPtr++;
 
-			while (startPtr <= endPtr){  //- 82){
+			while (startPtr <= endPtr){
 				mask = startPtr[0];
 				mask |= 0x20000;
 				startPtr[0] |= mask;
@@ -4840,7 +4837,7 @@ namespace PrimeSieveCS
 			startPtr[0] = mask;
 			startPtr++;
 
-			while (startPtr <= endPtr){  //- 86){
+			while (startPtr <= endPtr){
 				mask = startPtr[0];
 				mask |= 0x80;
 				startPtr[0] |= mask;
@@ -5096,7 +5093,7 @@ namespace PrimeSieveCS
 			startPtr[0] = mask;
 			startPtr++;
 
-			while (startPtr <= endPtr){  //- 90){
+			while (startPtr <= endPtr){
 				mask = startPtr[0];
 				mask |= 0x2;
 				mask |= 0x4000000000000000;
@@ -5359,7 +5356,7 @@ namespace PrimeSieveCS
 			startPtr[0] = mask;
 			startPtr++;
 
-			while (startPtr <= endPtr){  //- 94){
+			while (startPtr <= endPtr){
 				mask = startPtr[0];
 				mask |= 0x4000000000000000;
 				startPtr[0] |= mask;

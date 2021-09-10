@@ -6,9 +6,6 @@
 <#@ output extension=".cs" #>
 
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Numerics;
 using System.Runtime.CompilerServices;
 
 namespace PrimeSieveCS
@@ -49,7 +46,7 @@ namespace PrimeSieveCS
 			startPtr[0] = mask;
 			startPtr++;
 
-			while (startPtr <= endPtr){  //- <#= ((start + 64 * factor)) / 64 #>){
+			while (startPtr <= endPtr){
 <# 
 	mask -= 64;
 	while(stride < 64) { #>
