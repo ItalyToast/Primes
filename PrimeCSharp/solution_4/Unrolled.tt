@@ -44,7 +44,7 @@ namespace PrimeSieveCS
 			startPtr[0] |= mask;
 			startPtr++;
 
-			while (startPtr < endPtr){  //- <#= ((start + 64 * factor)) / 64 #>){
+			while (startPtr <= endPtr){  //- <#= ((start + 64 * factor)) / 64 #>){
 <# 
 	mask -= 64;
 	while(stride < 64) { #>

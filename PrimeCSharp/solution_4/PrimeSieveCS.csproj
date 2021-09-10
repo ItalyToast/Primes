@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -14,6 +14,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Update="UnrolledSparse.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>UnrolledSparse.cs</LastGenOutput>
+    </None>
     <None Update="Unrolled.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Unrolled.cs</LastGenOutput>
@@ -34,6 +38,11 @@
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>Unrolled.tt</DependentUpon>
+    </Compile>
+    <Compile Update="UnrolledSparse.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>UnrolledSparse.tt</DependentUpon>
     </Compile>
   </ItemGroup>
 

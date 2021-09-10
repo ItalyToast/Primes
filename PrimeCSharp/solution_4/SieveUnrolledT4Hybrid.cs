@@ -94,7 +94,7 @@ namespace PrimeSieveCS
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         unsafe static void ClearBitsStride8BlocksUnrolledV2(byte* ptr, uint start, uint factor, uint limit, uint blocksize)
         {
-            Span<uint> masks = stackalloc uint[8];
+            byte* masks = stackalloc byte[8];
             Span<ulong> offsets = stackalloc ulong[8];
 
             for (int i = 0; i < 8; i++)
@@ -117,17 +117,25 @@ namespace PrimeSieveCS
             var p6 = ptrStart + offsets[6];
             var p7 = ptrStart + offsets[7];
 
+            var m0 = (byte)masks[0];
+            var m1 = (byte)masks[1];
+            var m2 = (byte)masks[2];
+            var m3 = (byte)masks[3];
+            var m4 = (byte)masks[4];
+            var m5 = (byte)masks[5];
+            var m6 = (byte)masks[6];
+            var m7 = (byte)masks[7];
 
             while (p0 <= ptrEnd - factor)
             {
-                p0[0] |= (byte)masks[0];
-                p1[0] |= (byte)masks[1];
-                p2[0] |= (byte)masks[2];
-                p3[0] |= (byte)masks[3];
-                p4[0] |= (byte)masks[4];
-                p5[0] |= (byte)masks[5];
-                p6[0] |= (byte)masks[6];
-                p7[0] |= (byte)masks[7];
+                p0[0] |= m0;
+                p1[0] |= m1;
+                p2[0] |= m2;
+                p3[0] |= m3;
+                p4[0] |= m4;
+                p5[0] |= m5;
+                p6[0] |= m6;
+                p7[0] |= m7;
 
                 p0 += factor;
                 p1 += factor;
@@ -189,6 +197,10 @@ namespace PrimeSieveCS
                         Unrolled.ClearFactor(factor, ptr, halfLimit);
                         //ClearBitsDense((byte*)ptr, (factor * factor) / 2, factor, halfLimit);
                         //ClearBitsSparse(ptr, (factor * factor) / 2, factor, halfLimit);
+                    }
+                    else if (factor < 64)
+                    {
+                        UnrolledSparse.ClearFactor(factor, ptr, halfLimit);
                     }
                     else
                     {

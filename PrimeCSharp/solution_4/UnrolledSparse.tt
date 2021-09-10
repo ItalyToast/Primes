@@ -1,0 +1,71 @@
+﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".cs" #>
+
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Numerics;
+using System.Runtime.CompilerServices;
+
+namespace PrimeSieveCS
+{ 
+	class UnrolledSparse
+	{
+		public static unsafe void ClearFactor(uint factor, ulong* ptr, uint limit){
+			switch(factor){
+<#				for(int factor = 21; factor<= 100; factor++) { #>
+				case <#= factor #>: ClearFactor<#= factor #>((byte*)ptr, limit); break;
+<#				} #>
+			}
+		}
+
+<#		
+		for(int factor = 21; factor<= 100; factor+=1) { 
+		var start =  (factor * factor) / 2;
+#>
+		public static unsafe void ClearFactor<#= factor #>(byte* ptr, uint limit)
+		{
+			var startPtr = ptr + <#= start / 8 #>;
+			var endPtr = ptr + limit / 8 + 1;
+
+<# 
+	var masks = new int[8];
+    var offsets = new int[8];
+
+    for (int i = 0; i < 8; i++)
+    {
+        var s = start + factor * i;
+        masks[i] = 1 << ((int)s % 8);
+        offsets[i] = s / 8 - start / 8;
+    }
+
+	int mask   = start % 8;
+	int offset = 0;
+	int stride = 0;
+
+	for(var i = 0;i < 8; i++) { #>
+			var p<#= i #> = startPtr + <#= offsets[i] #>;
+<# } #>
+
+			while (p0 < endPtr - <#= factor #>){  //- <#= ((start + 64 * factor)) / 64 #>){
+<# for(var j = 0;j < 8; j++) { #>
+				p<#= j #>[0] |= <#= masks[j] #>;
+<# } #>
+
+<# for(var j = 0;j < 8; j++) { #>
+				p<#= j #> += <#= factor #>;
+<# } #>
+			}
+
+<# for(var j = 0;j < 8; j++) { #>
+			if(p0 + <#= offsets[j] #> > endPtr) return;
+			p0[<#= offsets[j] #>] |= <#= masks[j] #>;
+<# } #>
+		}
+<#		} #>
+	}
+}
